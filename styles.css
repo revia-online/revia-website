@@ -492,6 +492,151 @@ h1 {
   text-underline-offset: 4px;
 }
 
+.campaign-section {
+  background: linear-gradient(180deg, var(--white), var(--cyan-50));
+}
+
+.campaign-panel {
+  display: grid;
+  gap: clamp(18px, 3vw, 28px);
+  max-width: 1080px;
+  padding: clamp(24px, 4vw, 38px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+}
+
+.campaign-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 22px;
+  align-items: start;
+}
+
+.campaign-header h2 {
+  margin: 0;
+  color: var(--blue-950);
+  font-size: clamp(1.6rem, 3vw, 2.45rem);
+  line-height: 1.25;
+}
+
+.campaign-period {
+  margin: 0;
+  color: var(--blue-800);
+  font-size: 0.94rem;
+  font-weight: 900;
+  text-align: right;
+}
+
+.campaign-period span {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.campaign-lead {
+  max-width: 720px;
+  margin: 0;
+  color: var(--blue-950);
+  font-size: clamp(1.08rem, 2vw, 1.28rem);
+  font-weight: 900;
+}
+
+.campaign-status {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: clamp(18px, 3vw, 24px);
+  border: 1px solid #bdddf1;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--cyan-50), var(--white));
+}
+
+.campaign-status-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.campaign-slots {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 6px 18px;
+  color: var(--white);
+  font-size: clamp(1.55rem, 4vw, 2.45rem);
+  line-height: 1;
+  border-radius: 8px;
+  background: var(--blue-800);
+  box-shadow: 0 12px 26px rgba(20, 83, 154, 0.18);
+}
+
+.campaign-updated {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-align: right;
+}
+
+.campaign-quality-note {
+  margin: -8px 0 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+  font-weight: 800;
+}
+
+.campaign-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.86fr);
+  gap: 18px;
+}
+
+.campaign-block,
+.campaign-notes {
+  min-width: 0;
+  padding: clamp(18px, 3vw, 24px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--cyan-50);
+}
+
+.campaign-block h3,
+.campaign-notes h3 {
+  margin: 0 0 14px;
+  color: var(--blue-950);
+  font-size: 1.12rem;
+}
+
+.campaign-request {
+  background: var(--white);
+}
+
+.campaign-request p {
+  margin: 0;
+  color: #40516a;
+}
+
+.campaign-list {
+  margin-bottom: 0;
+}
+
+.campaign-notes {
+  background: var(--white);
+}
+
+.campaign-notes .campaign-list li {
+  font-size: 0.94rem;
+}
+
+.campaign-cta {
+  display: flex;
+  justify-content: center;
+}
+
 .pricing-section {
   background: linear-gradient(180deg, var(--cyan-50), #ffffff);
 }
@@ -1091,9 +1236,20 @@ textarea:focus {
   .experience-list,
   .youtube-intro,
   .youtube-card-grid,
+  .campaign-grid,
+  .campaign-status,
   .booking-layout,
   .contact-section {
     grid-template-columns: 1fr;
+  }
+
+  .campaign-header {
+    flex-direction: column;
+  }
+
+  .campaign-period,
+  .campaign-updated {
+    text-align: left;
   }
 
   .slot-grid,
@@ -1129,6 +1285,7 @@ textarea:focus {
 
   .hero-actions .button,
   .youtube-section .button,
+  .campaign-cta .button,
   .price-card .button,
   .booking-actions .button,
   .booking-complete .button,
@@ -1152,9 +1309,15 @@ textarea:focus {
 
   .feature-card,
   .leader-card,
+  .campaign-panel,
   .booking-panel,
   .contact-form {
     padding: 24px;
+  }
+
+  .campaign-slots {
+    width: 100%;
+    justify-content: center;
   }
 
   .faq-list summary {
