@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>学習スタイル診断｜オンライン家庭教師REVIA</title>
+    <meta
+      name="description"
+      content="自学自習・集団塾・個別指導塾・対面家庭教師・オンライン家庭教師のうち、自分に合う学習スタイルを診断できます。授業時間・週回数・月額目安も確認できます。"
+    />
+    <link rel="canonical" href="https://www.revia.website/diagnosis.html" />
+    <meta property="og:title" content="学習スタイル診断｜オンライン家庭教師REVIA" />
+    <meta
+      property="og:description"
+      content="自学自習・集団塾・個別指導塾・対面家庭教師・オンライン家庭教師のうち、自分に合う学習スタイルを診断できます。授業時間・週回数・月額目安も確認できます。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.revia.website/diagnosis.html" />
+    <meta property="og:image" content="https://www.revia.website/assets/hero-online-tutoring.png" />
+    <meta property="og:site_name" content="オンライン家庭教師REVIA" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="学習スタイル診断｜オンライン家庭教師REVIA" />
+    <meta
+      name="twitter:description"
+      content="自学自習・集団塾・個別指導塾・対面家庭教師・オンライン家庭教師のうち、自分に合う学習スタイルを診断できます。授業時間・週回数・月額目安も確認できます。"
+    />
+    <meta name="twitter:image" content="https://www.revia.website/assets/hero-online-tutoring.png" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="apple-touch-icon" href="favicon.png" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-734S14C7HR"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-734S14C7HR");
+    </script>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="REVIA トップへ">
+        <span class="brand-mark">R</span>
+        <span>
+          <strong>REVIA</strong>
+          <small>オンライン家庭教師</small>
+        </span>
+      </a>
+      <nav class="nav" aria-label="主要メニュー">
+        <a href="index.html#features">特徴</a>
+        <a href="index.html#pricing">料金</a>
+        <a href="diagnosis.html">診断</a>
+        <a href="index.html#booking">無料相談</a>
+      </nav>
+    </header>
+
+    <main class="diagnosis-page">
+      <section class="diagnosis-hero">
+        <div class="diagnosis-hero-inner">
+          <p class="eyebrow">Learning Style Check</p>
+          <h1>あなたに合う学習スタイル診断</h1>
+          <p>
+            質問に答えるだけで、自学自習・集団塾・個別指導塾・対面家庭教師・オンライン家庭教師のうち、どの学習スタイルが合いやすいかを診断できます。
+            あわせて、授業時間・週回数・月額目安も表示します。
+          </p>
+        </div>
+      </section>
+
+      <section class="section diagnosis-section" aria-labelledby="diagnosis-title">
+        <div class="section-heading">
+          <p class="eyebrow">無料診断</p>
+          <h2 id="diagnosis-title">今の状況に近いものを選んでください</h2>
+          <p class="section-copy">
+            REVIAに無理に誘導する診断ではありません。集団塾や自学自習が合う場合も、正直に第1候補として表示します。
+          </p>
+        </div>
+
+        <form class="diagnosis-form" id="diagnosisForm">
+          <div class="diagnosis-toolbar" aria-live="polite">
+            <span id="diagnosisProgress">0/24問 回答済み</span>
+            <span>所要時間の目安: 3〜5分</span>
+          </div>
+
+          <div class="diagnosis-questions" id="diagnosisQuestions"></div>
+
+          <noscript>
+            <p class="form-message">診断を利用するには、ブラウザのJavaScriptを有効にしてください。</p>
+          </noscript>
+
+          <div class="diagnosis-actions">
+            <button class="button primary" type="submit">診断結果を見る</button>
+            <p class="form-message" id="diagnosisMessage" role="status" aria-live="polite"></p>
+          </div>
+        </form>
+
+        <article class="diagnosis-result" id="diagnosisResult" hidden></article>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-info">
+        <p>&copy; 2026 REVIA Online Tutoring. All rights reserved.</p>
+        <p>運営: オンライン家庭教師REVIA</p>
+        <p>代表者: 原田靖也</p>
+        <p>所在地: 兵庫県姫路市</p>
+        <p>電話番号: 請求があった場合、遅滞なく開示いたします。</p>
+        <p>メールアドレス: <a href="mailto:revia2026.mail@gmail.com">revia2026.mail@gmail.com</a></p>
+        <p>お問い合わせ: 無料相談フォームまたはメールよりお願いいたします。</p>
+      </div>
+      <nav class="footer-links" aria-label="フッターリンク">
+        <a href="legal.html">特定商取引法表記</a>
+        <a href="terms.html">利用規約</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+      </nav>
+    </footer>
+
+    <script src="diagnosis-config.js"></script>
+    <script src="diagnosis.js"></script>
+  </body>
+</html>

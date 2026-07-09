@@ -637,6 +637,36 @@ h1 {
   justify-content: center;
 }
 
+.diagnosis-link-section {
+  background: var(--white);
+}
+
+.diagnosis-link-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: center;
+  max-width: 1080px;
+  padding: clamp(24px, 4vw, 36px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--cyan-50), var(--white));
+  box-shadow: var(--shadow);
+}
+
+.diagnosis-link-panel h2 {
+  margin: 0;
+  color: var(--blue-950);
+  font-size: clamp(1.55rem, 3vw, 2.35rem);
+  line-height: 1.28;
+}
+
+.diagnosis-link-panel p {
+  max-width: 680px;
+  margin: 12px 0 0;
+  color: var(--muted);
+}
+
 .pricing-section {
   background: linear-gradient(180deg, var(--cyan-50), #ffffff);
 }
@@ -1213,6 +1243,295 @@ textarea:focus {
   margin-top: 28px;
 }
 
+.diagnosis-page {
+  background: var(--cyan-50);
+}
+
+.diagnosis-hero {
+  padding: 92px clamp(18px, 5vw, 72px) 56px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.98), rgba(244, 252, 255, 0.92)),
+    url("assets/hero-online-tutoring.png") center right / cover no-repeat;
+}
+
+.diagnosis-hero-inner {
+  max-width: 900px;
+}
+
+.diagnosis-hero h1 {
+  margin: 0;
+  color: var(--blue-950);
+  font-size: clamp(2rem, 5vw, 4.4rem);
+  line-height: 1.14;
+}
+
+.diagnosis-hero p:not(.eyebrow) {
+  max-width: 780px;
+  margin: 22px 0 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 1.5vw, 1.12rem);
+}
+
+.diagnosis-section {
+  background: linear-gradient(180deg, var(--cyan-50), var(--white));
+}
+
+.diagnosis-form {
+  display: grid;
+  gap: 18px;
+  max-width: 1080px;
+}
+
+.diagnosis-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  color: var(--blue-800);
+  font-weight: 900;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+}
+
+.diagnosis-toolbar span:last-child {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.diagnosis-questions {
+  display: grid;
+  gap: 16px;
+}
+
+.diagnosis-question-card {
+  min-width: 0;
+  margin: 0;
+  padding: clamp(18px, 3vw, 24px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+}
+
+.diagnosis-question-card legend {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+  color: var(--blue-950);
+  font-size: clamp(1rem, 1.8vw, 1.18rem);
+  font-weight: 900;
+  line-height: 1.45;
+}
+
+.diagnosis-question-card legend span {
+  display: inline-grid;
+  flex: 0 0 auto;
+  width: 42px;
+  min-height: 34px;
+  place-items: center;
+  color: var(--white);
+  font-size: 0.86rem;
+  border-radius: 8px;
+  background: var(--blue-600);
+}
+
+.diagnosis-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.diagnosis-option {
+  display: flex;
+  min-width: 0;
+  min-height: 56px;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  color: var(--blue-950);
+  font-weight: 800;
+  line-height: 1.45;
+  border: 1px solid #bdddf1;
+  border-radius: 8px;
+  background: var(--cyan-50);
+  cursor: pointer;
+}
+
+.diagnosis-option input {
+  width: 18px;
+  min-width: 18px;
+  min-height: 18px;
+  padding: 0;
+  accent-color: var(--blue-600);
+  box-shadow: none;
+}
+
+.diagnosis-option:has(input:checked) {
+  color: var(--white);
+  border-color: var(--blue-600);
+  background: var(--blue-600);
+  box-shadow: 0 12px 26px rgba(30, 136, 229, 0.2);
+}
+
+.diagnosis-empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 16px;
+  color: var(--muted);
+  font-weight: 800;
+  border: 1px dashed #bdddf1;
+  border-radius: 8px;
+  background: var(--cyan-50);
+}
+
+.diagnosis-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  padding-top: 6px;
+}
+
+.diagnosis-result {
+  display: grid;
+  gap: 20px;
+  max-width: 1080px;
+  margin-top: 34px;
+  padding: clamp(22px, 4vw, 34px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--white);
+  box-shadow: var(--shadow);
+}
+
+.diagnosis-result[hidden] {
+  display: none;
+}
+
+.diagnosis-result-header h2 {
+  margin: 0;
+  color: var(--blue-950);
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
+  line-height: 1.25;
+}
+
+.diagnosis-result-header p:not(.eyebrow),
+.diagnosis-result-panel p,
+.diagnosis-result-cta p,
+.diagnosis-advanced-note {
+  margin: 12px 0 0;
+  color: var(--muted);
+}
+
+.diagnosis-result-candidates,
+.diagnosis-result-grid,
+.diagnosis-recommendation {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.diagnosis-candidate,
+.diagnosis-result-panel,
+.diagnosis-recommendation > div {
+  min-width: 0;
+  padding: clamp(18px, 3vw, 24px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--cyan-50);
+}
+
+.diagnosis-candidate span,
+.diagnosis-recommendation span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--blue-800);
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.diagnosis-candidate h3,
+.diagnosis-result-panel h3 {
+  margin: 0;
+  color: var(--blue-950);
+  font-size: clamp(1.22rem, 2vw, 1.55rem);
+  line-height: 1.35;
+}
+
+.diagnosis-candidate p {
+  margin: 10px 0 0;
+  color: #40516a;
+}
+
+.primary-candidate {
+  color: var(--white);
+  border-color: var(--blue-600);
+  background: var(--blue-600);
+}
+
+.primary-candidate span,
+.primary-candidate h3,
+.primary-candidate p {
+  color: var(--white);
+}
+
+.diagnosis-result-panel {
+  background: var(--white);
+}
+
+.diagnosis-result-panel ul {
+  margin: 14px 0 0;
+}
+
+.diagnosis-recommendation {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.diagnosis-recommendation strong {
+  display: block;
+  color: var(--blue-950);
+  font-size: clamp(1.45rem, 3vw, 2.2rem);
+  line-height: 1.2;
+}
+
+.diagnosis-recommendation small {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.diagnosis-advanced-note {
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--cyan-50);
+  font-weight: 800;
+}
+
+.diagnosis-result-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+  align-items: center;
+  justify-content: space-between;
+  padding: clamp(18px, 3vw, 24px);
+  border: 1px solid #bdddf1;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--cyan-50), var(--white));
+}
+
+.diagnosis-result-cta p {
+  margin: 0;
+  color: var(--blue-950);
+  font-weight: 900;
+}
+
 @media (max-width: 840px) {
   .site-header {
     align-items: flex-start;
@@ -1245,6 +1564,10 @@ textarea:focus {
   .youtube-card-grid,
   .campaign-grid,
   .campaign-status,
+  .diagnosis-link-panel,
+  .diagnosis-result-candidates,
+  .diagnosis-result-grid,
+  .diagnosis-recommendation,
   .booking-layout,
   .contact-section {
     grid-template-columns: 1fr;
@@ -1293,6 +1616,9 @@ textarea:focus {
   .hero-actions .button,
   .youtube-section .button,
   .campaign-cta .button,
+  .diagnosis-link-panel .button,
+  .diagnosis-actions .button,
+  .diagnosis-result-cta .button,
   .price-card .button,
   .booking-actions .button,
   .booking-complete .button,
@@ -1317,9 +1643,19 @@ textarea:focus {
   .feature-card,
   .leader-card,
   .campaign-panel,
+  .diagnosis-question-card,
+  .diagnosis-result,
   .booking-panel,
   .contact-form {
     padding: 24px;
+  }
+
+  .diagnosis-options {
+    grid-template-columns: 1fr;
+  }
+
+  .diagnosis-option {
+    min-height: 58px;
   }
 
   .campaign-slots {
