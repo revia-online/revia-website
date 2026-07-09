@@ -404,11 +404,39 @@
             <div class="field-grid">
               <label>
                 保護者様のお名前
-                <input name="guardian" type="text" autocomplete="name" required placeholder="山田 花子" />
+                <input name="guardian" type="text" autocomplete="name" required placeholder="山田 花子" data-kana-source="guardianKana" />
+              </label>
+              <label>
+                保護者氏名（ふりがな）
+                <input
+                  class="kana-input"
+                  name="guardianKana"
+                  type="text"
+                  autocomplete="off"
+                  inputmode="hiragana"
+                  required
+                  placeholder="例）やまだ はなこ"
+                  data-kana-target
+                />
+                <span class="field-hint">自動入力されたふりがなが異なる場合は、正しい読みへ修正してください。</span>
               </label>
               <label>
                 生徒様のお名前
-                <input name="student" type="text" required placeholder="山田 太郎" />
+                <input name="student" type="text" required placeholder="山田 太郎" data-kana-source="studentKana" />
+              </label>
+              <label>
+                生徒氏名（ふりがな）
+                <input
+                  class="kana-input"
+                  name="studentKana"
+                  type="text"
+                  autocomplete="off"
+                  inputmode="hiragana"
+                  required
+                  placeholder="例）やまだ たろう"
+                  data-kana-target
+                />
+                <span class="field-hint">自動入力されたふりがなが異なる場合は、正しい読みへ修正してください。</span>
               </label>
               <label>
                 メールアドレス
@@ -509,6 +537,7 @@
       </nav>
     </footer>
 
+    <script src="vendor/vanilla-autokana.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

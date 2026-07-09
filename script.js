@@ -4,6 +4,8 @@ const bookingComplete = document.querySelector("#bookingComplete");
 const slotSelects = document.querySelectorAll(".slot-select");
 const reservationList = document.querySelector("#reservationList");
 const clearReservationsButton = document.querySelector("#clearReservations");
+const kanaSourceInputs = document.querySelectorAll("[data-kana-source]");
+const kanaTargetInputs = document.querySelectorAll("[data-kana-target]");
 
 // 初心者向けメモ:
 // 開業後によく変更する値は、まずこの REVIA_SETTINGS だけを確認してください。
@@ -26,6 +28,8 @@ const REVIA_SETTINGS = {
 
 const FORM_SUCCESS_MESSAGE = "無料相談のお申し込みありがとうございます。\n内容を確認し、1〜2営業日以内にご連絡いたします。";
 const FORM_FAILURE_MESSAGE = "送信に失敗しました。時間をおいて再度お試しください。";
+const HIRAGANA_PATTERN = /^[ぁ-ゖーゝゞ\s　]+$/;
+const kanaAssistInstances = [];
 
 const readReservations = () => JSON.parse(localStorage.getItem(REVIA_SETTINGS.reservationStorageKey) || "[]");
 const saveReservations = (reservations) => {
@@ -48,6 +52,54 @@ const toLocalDateId = (date) => {
   const month = String(date.getMonth() + 1).padStart(2, "0");
   const day = String(date.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
+};
+
+const isHiraganaText = (value) => HIRAGANA_PATTERN.test(String(value || "").trim());
+
+const validateKanaInput = (input) => {
+  if (!input.value || isHiraganaText(input.value)) {
+    input.setCustomValidity("");
+    return true;
+  }
+
+  input.setCustomValidity("ふりがなは、ひらがなで入力してください。");
+  return false;
+};
+
+const setupKanaAssist = () => {
+  kanaTargetInputs.forEach((input) => {
+    input.addEventListener("input", () => validateKanaInput(input));
+  });
+
+  if (!window.VanillaAutoKana) {
+    console.warn("VanillaAutoKana が読み込まれていないため、ふりがな自動入力は無効です。");
+    return;
+  }
+
+  kanaSourceInputs.forEach((sourceInput) => {
+    const targetInput = bookingForm?.elements[sourceInput.dataset.kanaSource];
+
+    if (!targetInput) {
+      return;
+    }
+
+    const assist = window.VanillaAutoKana.bind(sourceInput, targetInput, {
+      onUpdate: (_value, input) => validateKanaInput(input),
+    });
+
+    if (assist) {
+      kanaAssistInstances.push(assist);
+    }
+  });
+};
+
+const resetKanaAssistState = () => {
+  kanaTargetInputs.forEach((input) => {
+    delete input.dataset.kanaEdited;
+    input.setCustomValidity("");
+  });
+
+  kanaAssistInstances.forEach((assist) => assist.reset());
 };
 
 const formatDate = (date) =>
@@ -158,9 +210,11 @@ const buildCalendarUrl = (reservation) => {
   const preferenceLabels = reservation.preferenceLabels || [reservation.slotLabel || "-", "-", "-"];
   const firstSlot = preferenceIds[0];
   const dates = `${slotIdToGoogleDate(firstSlot)}/${slotIdToGoogleDate(firstSlot, REVIA_SETTINGS.meetingMinutes)}`;
-  const details = [
+    const details = [
     `保護者氏名: ${reservation.guardian}`,
+    `保護者氏名（ふりがな）: ${reservation.guardianKana || "未入力"}`,
     `生徒氏名: ${reservation.student}`,
+    `生徒氏名（ふりがな）: ${reservation.studentKana || "未入力"}`,
     `学年: ${reservation.grade}`,
     `希望科目: ${reservation.subject}`,
     `相談内容: ${reservation.memo || "未入力"}`,
@@ -249,7 +303,7 @@ const renderReservations = () => {
           <strong>${escapeHtml(reservation.preferenceLabels?.[0] || reservation.slotLabel)}</strong>
           <span>第2希望: ${escapeHtml(reservation.preferenceLabels?.[1] || "-")}</span>
           <span>第3希望: ${escapeHtml(reservation.preferenceLabels?.[2] || "-")}</span>
-          <span>${escapeHtml(reservation.guardian)}様 / 生徒: ${escapeHtml(reservation.student)}</span>
+          <span>${escapeHtml(reservation.guardian)}様（${escapeHtml(reservation.guardianKana || "-")}） / 生徒: ${escapeHtml(reservation.student)}（${escapeHtml(reservation.studentKana || "-")}）</span>
           <span>${escapeHtml(reservation.grade)} / ${escapeHtml(reservation.subject)} / ${escapeHtml(reservation.email)}</span>
           <div class="reservation-tools">
             <a href="${buildCalendarUrl(reservation)}" target="_blank" rel="noopener">Googleカレンダーに追加</a>
@@ -309,7 +363,9 @@ bookingForm?.addEventListener("submit", async (event) => {
     preferenceIds,
     preferenceLabels,
     guardian: data.get("guardian")?.toString().trim(),
+    guardianKana: data.get("guardianKana")?.toString().trim(),
     student: data.get("student")?.toString().trim(),
+    studentKana: data.get("studentKana")?.toString().trim(),
     email: data.get("bookingEmail")?.toString().trim(),
     grade: data.get("studentGrade"),
     subject: data.get("subject"),
@@ -334,6 +390,7 @@ bookingForm?.addEventListener("submit", async (event) => {
   saveReservations([reservation, ...reservations]);
   bookingMessage.textContent = FORM_SUCCESS_MESSAGE;
   bookingForm.reset();
+  resetKanaAssistState();
   bookingForm.hidden = true;
   bookingComplete.hidden = false;
   submitButton.disabled = false;
@@ -348,6 +405,7 @@ slotSelects.forEach((select) => {
 clearReservationsButton?.addEventListener("click", () => {
   saveReservations([]);
   bookingMessage.textContent = "予約一覧をクリアしました。";
+  resetKanaAssistState();
   bookingForm.hidden = false;
   bookingComplete.hidden = true;
   renderSlotSelects();
@@ -355,5 +413,6 @@ clearReservationsButton?.addEventListener("click", () => {
 });
 
 renderPricing();
+setupKanaAssist();
 renderSlotSelects();
 renderReservations();
