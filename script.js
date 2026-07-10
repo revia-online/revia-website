@@ -53,6 +53,13 @@ const escapeHtml = (value) =>
     };
     return entities[character];
   });
+const sendClickAnalyticsEvent = (eventName) => {
+  if (!eventName || typeof window.gtag !== "function") {
+    return;
+  }
+
+  window.gtag("event", eventName);
+};
 const toLocalDateId = (date) => {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -601,6 +608,16 @@ clearReservationsButton?.addEventListener("click", () => {
   bookingComplete.hidden = true;
   loadAvailability();
   renderReservations();
+});
+
+document.addEventListener("click", (event) => {
+  const target = event.target.closest("[data-ga-event]");
+
+  if (!target) {
+    return;
+  }
+
+  sendClickAnalyticsEvent(target.dataset.gaEvent);
 });
 
 renderPricing();

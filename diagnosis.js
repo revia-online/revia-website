@@ -216,6 +216,14 @@ const sendAnalyticsEvent = (topCandidate, secondCandidate, recommendation) => {
   });
 };
 
+const sendClickAnalyticsEvent = (eventName) => {
+  if (!eventName || typeof window.gtag !== "function") {
+    return;
+  }
+
+  window.gtag("event", eventName);
+};
+
 const renderResult = (rankedStyles, answers) => {
   const first = rankedStyles[0];
   const second = rankedStyles[1];
@@ -276,9 +284,16 @@ const renderResult = (rankedStyles, answers) => {
 
     <p class="diagnosis-advanced-note">${escapeHtml(config.advancedNote)}</p>
 
-    <div class="diagnosis-result-cta">
-      <p>オンライン学習を始める場合は、無料相談で状況を確認できます。</p>
-      <a class="button primary" href="index.html#booking">無料相談で詳しく確認する</a>
+    <div class="diagnosis-result-cta enhanced-result-cta">
+      <div>
+        <h3>この診断結果をもとに、無料相談で詳しく確認できます</h3>
+        <p>
+          診断結果はあくまで目安です。実際に必要な授業時間・週回数・科目は、現在の学習状況や目標によって変わります。
+          無料相談では、診断結果をもとに、無理のない学習プランを一緒に確認します。
+        </p>
+        <small>無料相談時に、診断結果をお伝えいただくとスムーズです。</small>
+      </div>
+      <a class="button primary" href="index.html#booking" data-ga-event="diagnosis_result_booking_click">この結果をもとに無料相談する</a>
     </div>
   `;
 
@@ -288,6 +303,16 @@ const renderResult = (rankedStyles, answers) => {
 
 renderQuestions();
 updateProgress();
+
+document.addEventListener("click", (event) => {
+  const target = event.target.closest("[data-ga-event]");
+
+  if (!target) {
+    return;
+  }
+
+  sendClickAnalyticsEvent(target.dataset.gaEvent);
+});
 
 diagnosisForm.addEventListener("change", (event) => {
   if (event.target.name === "grade") {
