@@ -481,25 +481,50 @@
 
             <fieldset class="slot-fieldset">
               <legend>希望日時</legend>
-              <div class="preference-grid" aria-live="polite">
-                <label>
-                  第1希望
-                  <select name="preferredSlot1" class="slot-select" required>
-                    <option value="">選択してください</option>
-                  </select>
-                </label>
-                <label>
-                  第2希望
-                  <select name="preferredSlot2" class="slot-select" required>
-                    <option value="">選択してください</option>
-                  </select>
-                </label>
-                <label>
-                  第3希望
-                  <select name="preferredSlot3" class="slot-select" required>
-                    <option value="">選択してください</option>
-                  </select>
-                </label>
+              <p class="availability-status" id="availabilityStatus" role="status" aria-live="polite">空き時間を読み込み中です。</p>
+              <div class="preference-grid availability-grid" aria-live="polite">
+                <div class="preference-pair">
+                  <label>
+                    第1希望（日付）
+                    <select name="preferredDate1" class="date-select" data-preference-index="1" required>
+                      <option value="">日付を選択</option>
+                    </select>
+                  </label>
+                  <label>
+                    第1希望（時間）
+                    <select name="preferredSlot1" class="slot-select" data-preference-index="1" required>
+                      <option value="">時間を選択</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="preference-pair">
+                  <label>
+                    第2希望（日付）
+                    <select name="preferredDate2" class="date-select" data-preference-index="2" required>
+                      <option value="">日付を選択</option>
+                    </select>
+                  </label>
+                  <label>
+                    第2希望（時間）
+                    <select name="preferredSlot2" class="slot-select" data-preference-index="2" required>
+                      <option value="">時間を選択</option>
+                    </select>
+                  </label>
+                </div>
+                <div class="preference-pair">
+                  <label>
+                    第3希望（日付）
+                    <select name="preferredDate3" class="date-select" data-preference-index="3" required>
+                      <option value="">日付を選択</option>
+                    </select>
+                  </label>
+                  <label>
+                    第3希望（時間）
+                    <select name="preferredSlot3" class="slot-select" data-preference-index="3" required>
+                      <option value="">時間を選択</option>
+                    </select>
+                  </label>
+                </div>
               </div>
             </fieldset>
 

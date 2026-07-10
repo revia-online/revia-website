@@ -2,6 +2,8 @@ const bookingForm = document.querySelector("#bookingForm");
 const bookingMessage = document.querySelector("#bookingMessage");
 const bookingComplete = document.querySelector("#bookingComplete");
 const slotSelects = document.querySelectorAll(".slot-select");
+const dateSelects = document.querySelectorAll(".date-select");
+const availabilityStatus = document.querySelector("#availabilityStatus");
 const reservationList = document.querySelector("#reservationList");
 const clearReservationsButton = document.querySelector("#clearReservations");
 const kanaSourceInputs = document.querySelectorAll("[data-kana-source]");
@@ -28,8 +30,12 @@ const REVIA_SETTINGS = {
 
 const FORM_SUCCESS_MESSAGE = "無料相談のお申し込みありがとうございます。\n内容を確認し、1〜2営業日以内にご連絡いたします。";
 const FORM_FAILURE_MESSAGE = "送信に失敗しました。時間をおいて再度お試しください。";
+const SLOT_UNAVAILABLE_MESSAGE = "その時間は埋まりました。別の時間を選んでください。";
 const HIRAGANA_PATTERN = /^[ぁ-ゖーゝゞ\s　]+$/;
 const kanaAssistInstances = [];
+let availabilitySlots = [];
+let availabilityDates = [];
+let availabilityLoadFailed = false;
 
 const readReservations = () => JSON.parse(localStorage.getItem(REVIA_SETTINGS.reservationStorageKey) || "[]");
 const saveReservations = (reservations) => {
@@ -139,34 +145,103 @@ const renderPricing = () => {
   }
 };
 
-const createSlots = () => {
-  const slots = [];
-  const today = new Date();
-  const times = ["10:00", "14:00", "19:00"];
-
-  for (let offset = 1; slots.length < 18 && offset < 21; offset += 1) {
-    const date = new Date(today);
-    date.setDate(today.getDate() + offset);
-
-    if (date.getDay() === 0) {
-      continue;
-    }
-
-    const dateId = toLocalDateId(date);
-    times.forEach((time) => {
-      slots.push({
-        id: `${dateId}-${time}`,
-        label: `${formatDate(date)} ${time}`,
-      });
-    });
-  }
-
-  return slots.slice(0, 18);
-};
-
 const getReservedSlotIds = () => {
   const reservations = readReservations();
-  return new Set(reservations.flatMap((reservation) => reservation.preferenceIds || [reservation.slotId]).filter(Boolean));
+  return new Set(
+    reservations
+      .flatMap((reservation) => [reservation.confirmedSlotId, reservation.slotId, ...(reservation.preferenceIds || [])])
+      .filter(Boolean),
+  );
+};
+
+const setAvailabilityStatus = (message, isError = false) => {
+  if (!availabilityStatus) {
+    return;
+  }
+
+  availabilityStatus.textContent = message;
+  availabilityStatus.classList.toggle("is-error", isError);
+};
+
+const getAvailabilityUrl = (callbackName = "") => {
+  const url = new URL(REVIA_SETTINGS.bookingEndpoint);
+  url.searchParams.set("mode", "availability");
+  url.searchParams.set("_", Date.now().toString());
+
+  if (callbackName) {
+    url.searchParams.set("callback", callbackName);
+  }
+
+  return url.toString();
+};
+
+const fetchAvailabilityJsonp = () =>
+  new Promise((resolve, reject) => {
+    const callbackName = `reviaAvailability_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    const script = document.createElement("script");
+    const timeoutId = window.setTimeout(() => {
+      delete window[callbackName];
+      script.remove();
+      reject(new Error("空き時間の取得がタイムアウトしました。"));
+    }, 12000);
+
+    window[callbackName] = (payload) => {
+      window.clearTimeout(timeoutId);
+      delete window[callbackName];
+      script.remove();
+      resolve(payload);
+    };
+
+    script.src = getAvailabilityUrl(callbackName);
+    script.onerror = () => {
+      window.clearTimeout(timeoutId);
+      delete window[callbackName];
+      script.remove();
+      reject(new Error("空き時間を取得できませんでした。"));
+    };
+    document.body.append(script);
+  });
+
+const fetchAvailability = async () => {
+  try {
+    const response = await fetch(getAvailabilityUrl(), {
+      method: "GET",
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      throw new Error("空き時間の取得に失敗しました。");
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.warn(error);
+    return fetchAvailabilityJsonp();
+  }
+};
+
+const getSlotsByDate = () =>
+  availabilitySlots.reduce((groups, slot) => {
+    if (!groups.has(slot.date)) {
+      groups.set(slot.date, []);
+    }
+
+    groups.get(slot.date).push(slot);
+    return groups;
+  }, new Map());
+
+const getSlotById = (slotId) => availabilitySlots.find((slot) => slot.id === slotId);
+
+const setBookingControlsDisabled = (disabled) => {
+  dateSelects.forEach((select) => {
+    select.disabled = disabled;
+  });
+
+  slotSelects.forEach((select) => {
+    select.disabled = disabled;
+  });
+
+  bookingForm?.querySelector('button[type="submit"]')?.toggleAttribute("disabled", disabled);
 };
 
 const renderSlotSelects = () => {
@@ -175,25 +250,100 @@ const renderSlotSelects = () => {
   }
 
   const reservedSlotIds = getReservedSlotIds();
-  const slots = createSlots();
+  const slotsByDate = getSlotsByDate();
+  const hasSlots = availabilitySlots.length > 0;
 
-  slotSelects.forEach((select) => {
-    const currentValue = select.value;
-    select.innerHTML = '<option value="">選択してください</option>';
+  dateSelects.forEach((dateSelect) => {
+    const currentDate = dateSelect.value;
+    dateSelect.innerHTML = '<option value="">日付を選択</option>';
 
-    slots.forEach((slot) => {
+    availabilityDates.forEach((dateItem) => {
       const option = document.createElement("option");
-      option.value = slot.id;
-      option.textContent = reservedSlotIds.has(slot.id) ? `${slot.label}（受付済み）` : slot.label;
-      option.dataset.label = slot.label;
-      option.disabled = reservedSlotIds.has(slot.id);
-      select.append(option);
+      option.value = dateItem.date;
+      option.textContent = dateItem.label;
+      dateSelect.append(option);
     });
 
-    if (currentValue && [...select.options].some((option) => option.value === currentValue && !option.disabled)) {
-      select.value = currentValue;
+    if (currentDate && slotsByDate.has(currentDate)) {
+      dateSelect.value = currentDate;
     }
   });
+
+  slotSelects.forEach((slotSelect) => {
+    const currentValue = slotSelect.value;
+    const index = slotSelect.dataset.preferenceIndex;
+    const dateSelect = [...dateSelects].find((select) => select.dataset.preferenceIndex === index);
+    const selectedDate = dateSelect?.value || "";
+    const daySlots = slotsByDate.get(selectedDate) || [];
+
+    slotSelect.innerHTML = '<option value="">時間を選択</option>';
+
+    daySlots.forEach((slot) => {
+      const option = document.createElement("option");
+      option.value = slot.id;
+      option.textContent = reservedSlotIds.has(slot.id) ? `${slot.time}（受付済み）` : slot.time;
+      option.dataset.label = slot.label;
+      option.disabled = reservedSlotIds.has(slot.id);
+      slotSelect.append(option);
+    });
+
+    if (currentValue && [...slotSelect.options].some((option) => option.value === currentValue && !option.disabled)) {
+      slotSelect.value = currentValue;
+    }
+
+    slotSelect.disabled = !hasSlots || !selectedDate || daySlots.length === 0;
+  });
+
+  const shouldDisableAll = availabilityLoadFailed || !hasSlots;
+  dateSelects.forEach((select) => {
+    select.disabled = shouldDisableAll;
+  });
+
+  if (shouldDisableAll) {
+    slotSelects.forEach((select) => {
+      select.disabled = true;
+    });
+  }
+
+  bookingForm?.querySelector('button[type="submit"]')?.toggleAttribute("disabled", shouldDisableAll);
+
+  if (!hasSlots && !availabilityLoadFailed) {
+    setAvailabilityStatus("現在選べる日時がありません。お手数ですが、メールまたは無料相談フォームからお問い合わせください。", true);
+  } else if (hasSlots) {
+    setAvailabilityStatus("空いている日時だけを表示しています。日付を選ぶと、その日の時間を選べます。");
+  }
+
+  updateDuplicateOptions();
+};
+
+const loadAvailability = async () => {
+  if (!bookingForm || slotSelects.length === 0) {
+    return;
+  }
+
+  availabilityLoadFailed = false;
+  setBookingControlsDisabled(true);
+  setAvailabilityStatus("空き時間を読み込み中です。");
+
+  try {
+    const payload = await fetchAvailability();
+
+    if (!payload.ok) {
+      throw new Error(payload.message || "空き時間を取得できませんでした。");
+    }
+
+    availabilitySlots = payload.slots || [];
+    availabilityDates = payload.dates || [];
+    availabilityLoadFailed = false;
+    renderSlotSelects();
+  } catch (error) {
+    console.error(error);
+    availabilitySlots = [];
+    availabilityDates = [];
+    availabilityLoadFailed = true;
+    setAvailabilityStatus("空き時間を取得できませんでした。時間をおいて再度お試しください。", true);
+    renderSlotSelects();
+  }
 };
 
 const slotIdToGoogleDate = (slotId, extraMinutes = 0) => {
@@ -208,7 +358,7 @@ const slotIdToGoogleDate = (slotId, extraMinutes = 0) => {
 const buildCalendarUrl = (reservation) => {
   const preferenceIds = reservation.preferenceIds || [reservation.slotId];
   const preferenceLabels = reservation.preferenceLabels || [reservation.slotLabel || "-", "-", "-"];
-  const firstSlot = preferenceIds[0];
+  const firstSlot = reservation.confirmedSlotId || preferenceIds[0];
   const dates = `${slotIdToGoogleDate(firstSlot)}/${slotIdToGoogleDate(firstSlot, REVIA_SETTINGS.meetingMinutes)}`;
     const details = [
     `保護者氏名: ${reservation.guardian}`,
@@ -218,6 +368,7 @@ const buildCalendarUrl = (reservation) => {
     `学年: ${reservation.grade}`,
     `希望科目: ${reservation.subject}`,
     `相談内容: ${reservation.memo || "未入力"}`,
+    `確定日時: ${reservation.confirmedSlotLabel || preferenceLabels[0]}`,
     `第1希望: ${preferenceLabels[0]}`,
     `第2希望: ${preferenceLabels[1]}`,
     `第3希望: ${preferenceLabels[2]}`,
@@ -274,14 +425,28 @@ const sendReservation = async (reservation) => {
     throw new Error("Google Apps Script のウェブアプリURLが未設定です。");
   }
 
-  await fetch(REVIA_SETTINGS.bookingEndpoint, {
+  const response = await fetch(REVIA_SETTINGS.bookingEndpoint, {
     method: "POST",
-    mode: "no-cors",
     headers: {
       "Content-Type": "text/plain;charset=utf-8",
     },
     body: JSON.stringify(reservation),
   });
+
+  if (!response.ok) {
+    throw new Error(FORM_FAILURE_MESSAGE);
+  }
+
+  const result = await response.json();
+
+  if (!result.ok) {
+    const error = new Error(result.message || FORM_FAILURE_MESSAGE);
+    error.code = result.code;
+    error.result = result;
+    throw error;
+  }
+
+  return result;
 };
 
 const renderReservations = () => {
@@ -300,7 +465,7 @@ const renderReservations = () => {
     .map(
       (reservation) => `
         <article class="reservation-item">
-          <strong>${escapeHtml(reservation.preferenceLabels?.[0] || reservation.slotLabel)}</strong>
+          <strong>${escapeHtml(reservation.confirmedSlotLabel || reservation.preferenceLabels?.[0] || reservation.slotLabel)}</strong>
           <span>第2希望: ${escapeHtml(reservation.preferenceLabels?.[1] || "-")}</span>
           <span>第3希望: ${escapeHtml(reservation.preferenceLabels?.[2] || "-")}</span>
           <span>${escapeHtml(reservation.guardian)}様（${escapeHtml(reservation.guardianKana || "-")}） / 生徒: ${escapeHtml(reservation.student)}（${escapeHtml(reservation.studentKana || "-")}）</span>
@@ -331,6 +496,11 @@ const updateDuplicateOptions = () => {
 
 bookingForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
+
+  if (availabilityLoadFailed || availabilitySlots.length === 0) {
+    bookingMessage.textContent = "空き時間を取得できていません。時間をおいて再度お試しください。";
+    return;
+  }
 
   if (!bookingForm.checkValidity()) {
     bookingForm.reportValidity();
@@ -378,28 +548,49 @@ bookingForm?.addEventListener("submit", async (event) => {
   submitButton.disabled = true;
   bookingMessage.textContent = "送信しています。しばらくお待ちください。";
 
+  let result;
+
   try {
-    await sendReservation(reservation);
+    result = await sendReservation(reservation);
   } catch (error) {
     console.error(error);
-    bookingMessage.textContent = FORM_FAILURE_MESSAGE;
+    bookingMessage.textContent = error.code === "slot_unavailable" ? SLOT_UNAVAILABLE_MESSAGE : error.message || FORM_FAILURE_MESSAGE;
     submitButton.disabled = false;
+    await loadAvailability();
     return;
   }
 
-  saveReservations([reservation, ...reservations]);
+  const confirmedReservation = {
+    ...reservation,
+    confirmedSlotId: result.confirmedSlotId || reservation.preferenceIds[0],
+    confirmedSlotLabel: result.confirmedSlotLabel || reservation.preferenceLabels[0],
+  };
+
+  saveReservations([confirmedReservation, ...reservations]);
   bookingMessage.textContent = FORM_SUCCESS_MESSAGE;
   bookingForm.reset();
   resetKanaAssistState();
   bookingForm.hidden = true;
   bookingComplete.hidden = false;
   submitButton.disabled = false;
-  renderSlotSelects();
+  await loadAvailability();
   renderReservations();
 });
 
 slotSelects.forEach((select) => {
   select.addEventListener("change", updateDuplicateOptions);
+});
+
+dateSelects.forEach((select) => {
+  select.addEventListener("change", () => {
+    const targetSlot = [...slotSelects].find((slotSelect) => slotSelect.dataset.preferenceIndex === select.dataset.preferenceIndex);
+
+    if (targetSlot) {
+      targetSlot.value = "";
+    }
+
+    renderSlotSelects();
+  });
 });
 
 clearReservationsButton?.addEventListener("click", () => {
@@ -408,11 +599,11 @@ clearReservationsButton?.addEventListener("click", () => {
   resetKanaAssistState();
   bookingForm.hidden = false;
   bookingComplete.hidden = true;
-  renderSlotSelects();
+  loadAvailability();
   renderReservations();
 });
 
 renderPricing();
 setupKanaAssist();
-renderSlotSelects();
+loadAvailability();
 renderReservations();

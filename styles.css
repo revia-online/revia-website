@@ -867,6 +867,37 @@ li::before {
   gap: 14px;
 }
 
+.availability-status {
+  margin: 0 0 12px;
+  padding: 12px 14px;
+  color: var(--blue-800);
+  font-size: 0.92rem;
+  font-weight: 800;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--cyan-50);
+}
+
+.availability-status.is-error {
+  color: #9d2c2c;
+  border-color: #f2c3c3;
+  background: #fff7f7;
+}
+
+.availability-grid {
+  align-items: start;
+}
+
+.preference-pair {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--cyan-50);
+}
+
 .slot-option {
   position: relative;
 }
