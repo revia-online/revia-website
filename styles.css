@@ -212,6 +212,65 @@ h1 {
   box-shadow: 0 14px 28px rgba(30, 136, 229, 0.25);
 }
 
+.important-submit {
+  width: min(100%, 420px);
+  min-height: 60px;
+  padding: 16px 30px;
+  color: var(--white);
+  font-family: inherit;
+  font-size: clamp(1.125rem, 1.4vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: center;
+  white-space: normal;
+  border-color: var(--blue-800);
+  background: var(--blue-800);
+  box-shadow: 0 16px 32px rgba(20, 83, 154, 0.28);
+  -webkit-appearance: none;
+  appearance: none;
+  touch-action: manipulation;
+  transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.booking-submit {
+  width: min(100%, 480px);
+  min-height: 64px;
+}
+
+.diagnosis-submit {
+  width: min(100%, 440px);
+}
+
+.important-submit:hover:not(:disabled) {
+  border-color: var(--blue-950);
+  background: var(--blue-950);
+  box-shadow: 0 18px 36px rgba(11, 36, 71, 0.3);
+  transform: translateY(-1px);
+}
+
+.important-submit:active:not(:disabled) {
+  border-color: var(--blue-600);
+  background: var(--blue-600);
+  box-shadow: 0 8px 18px rgba(30, 136, 229, 0.24);
+  transform: translateY(0);
+}
+
+.important-submit:focus-visible {
+  outline: 3px solid #7dd3fc;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 5px rgba(20, 83, 154, 0.2), 0 16px 32px rgba(20, 83, 154, 0.28);
+}
+
+.important-submit:disabled {
+  color: #526274;
+  border-color: #c1ced9;
+  background: #e1e8ee;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 1;
+  transform: none;
+}
+
 .secondary,
 .tertiary {
   color: var(--blue-800);
@@ -1230,6 +1289,7 @@ li::before {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+  align-items: center;
 }
 
 .booking-note {
@@ -1990,6 +2050,11 @@ textarea:focus {
   .contact-form .button {
     width: 100%;
     min-height: 52px;
+  }
+
+  .important-submit {
+    min-height: 60px;
+    padding: 16px 20px;
   }
 
   .pricing-link {
