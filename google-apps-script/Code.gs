@@ -186,10 +186,11 @@ function doPost(event) {
       });
     }
 
+    console.error(error.stack);
     return json_({
       ok: false,
       code: "booking_failed",
-      message: "予約処理中にエラーが発生しました。恐れ入りますが、時間をおいて再度お試しください。",
+      message: `実際のエラー：${safeErrorMessage_(error)}`,
     });
   } finally {
     if (lockAcquired) {
@@ -576,9 +577,16 @@ function createCalendarEvent_(reservation, slot) {
 }
 
 function saveToSheet_(reservation) {
-  const spreadsheet = REVIA_SETTINGS.spreadsheetId
-    ? SpreadsheetApp.openById(REVIA_SETTINGS.spreadsheetId)
-    : SpreadsheetApp.getActiveSpreadsheet();
+  const properties = PropertiesService.getScriptProperties();
+  let spreadsheetId = clean_(REVIA_SETTINGS.spreadsheetId) || clean_(properties.getProperty("SPREADSHEET_ID"));
+
+  if (!spreadsheetId) {
+    const createdSpreadsheet = SpreadsheetApp.create("REVIA 無料相談予約");
+    spreadsheetId = createdSpreadsheet.getId();
+    properties.setProperty("SPREADSHEET_ID", spreadsheetId);
+  }
+
+  const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
 
   if (!spreadsheet) {
     throw new Error("保存先のGoogleスプレッドシートが見つかりません。");
