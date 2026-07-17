@@ -1,8 +1,9 @@
 const bookingForm = document.querySelector("#bookingForm");
 const bookingMessage = document.querySelector("#bookingMessage");
 const bookingComplete = document.querySelector("#bookingComplete");
-const slotSelects = document.querySelectorAll(".slot-select");
-const dateSelects = document.querySelectorAll(".date-select");
+const bookingCompleteTime = document.querySelector("#bookingCompleteTime");
+const slotSelect = document.querySelector(".slot-select");
+const dateSelect = document.querySelector(".date-select");
 const availabilityStatus = document.querySelector("#availabilityStatus");
 const reservationList = document.querySelector("#reservationList");
 const clearReservationsButton = document.querySelector("#clearReservations");
@@ -12,12 +13,11 @@ const kanaTargetInputs = document.querySelectorAll("[data-kana-target]");
 // 初心者向けメモ:
 // 開業後によく変更する値は、まずこの REVIA_SETTINGS だけを確認してください。
 // 予約URLは Google Apps Script を公開したあと、そのウェブアプリURLを bookingEndpoint に貼り付けます。
-// ZoomURL、連絡先メール、料金もここを変えるとサイト表示とメール文面に反映されます。
+// Zoom認証情報はブラウザ側に置かず、Google Apps Scriptのスクリプトプロパティで管理します。
 const REVIA_SETTINGS = {
   reservationStorageKey: "reviaReservations",
   bookingEndpoint: "https://script.google.com/macros/s/AKfycbyUlvcRULNhChQLCBXgbmdXk51614H_lQL9q6Kae_Eeq9__kQ2W-SCA4a3F9-kWy3FRXA/exec",
   contactEmail: "revia2026.mail@gmail.com",
-  zoomUrl: "https://us06web.zoom.us/j/3796718185?pwd=gJDNJ5d2zhQNGXL7mboKV7HjGMVQSa.1",
   meetingMinutes: 30,
   prices: {
     60: { lesson: 5500, monthly: 22000 },
@@ -28,9 +28,9 @@ const REVIA_SETTINGS = {
   },
 };
 
-const FORM_SUCCESS_MESSAGE = "無料相談のお申し込みありがとうございます。\n内容を確認し、1〜2営業日以内にご連絡いたします。";
+const FORM_SUCCESS_MESSAGE = "無料相談のご予約が確定しました。\nZoom参加URLを、ご登録のメールアドレスへお送りしました。";
 const FORM_FAILURE_MESSAGE = "送信に失敗しました。時間をおいて再度お試しください。";
-const SLOT_UNAVAILABLE_MESSAGE = "その時間は埋まりました。別の時間を選んでください。";
+const SLOT_UNAVAILABLE_MESSAGE = "申し訳ありません。この時間は直前に予約が入りました。別の日時を選択してください。";
 const HIRAGANA_PATTERN = /^[ぁ-ゖーゝゞ\s　]+$/;
 const kanaAssistInstances = [];
 let availabilitySlots = [];
@@ -152,15 +152,6 @@ const renderPricing = () => {
   }
 };
 
-const getReservedSlotIds = () => {
-  const reservations = readReservations();
-  return new Set(
-    reservations
-      .flatMap((reservation) => [reservation.confirmedSlotId, reservation.slotId, ...(reservation.preferenceIds || [])])
-      .filter(Boolean),
-  );
-};
-
 const setAvailabilityStatus = (message, isError = false) => {
   if (!availabilityStatus) {
     return;
@@ -240,77 +231,59 @@ const getSlotsByDate = () =>
 const getSlotById = (slotId) => availabilitySlots.find((slot) => slot.id === slotId);
 
 const setBookingControlsDisabled = (disabled) => {
-  dateSelects.forEach((select) => {
-    select.disabled = disabled;
-  });
+  if (dateSelect) {
+    dateSelect.disabled = disabled;
+  }
 
-  slotSelects.forEach((select) => {
-    select.disabled = disabled;
-  });
+  if (slotSelect) {
+    slotSelect.disabled = disabled;
+  }
 
   bookingForm?.querySelector('button[type="submit"]')?.toggleAttribute("disabled", disabled);
 };
 
-const renderSlotSelects = () => {
-  if (slotSelects.length === 0) {
+const renderSlotPicker = () => {
+  if (!slotSelect || !dateSelect) {
     return;
   }
 
-  const reservedSlotIds = getReservedSlotIds();
   const slotsByDate = getSlotsByDate();
   const hasSlots = availabilitySlots.length > 0;
+  const currentDate = dateSelect.value;
+  const currentSlot = slotSelect.value;
 
-  dateSelects.forEach((dateSelect) => {
-    const currentDate = dateSelect.value;
-    dateSelect.innerHTML = '<option value="">日付を選択</option>';
+  dateSelect.innerHTML = '<option value="">日付を選択</option>';
 
-    availabilityDates.forEach((dateItem) => {
-      const option = document.createElement("option");
-      option.value = dateItem.date;
-      option.textContent = dateItem.label;
-      dateSelect.append(option);
-    });
-
-    if (currentDate && slotsByDate.has(currentDate)) {
-      dateSelect.value = currentDate;
-    }
+  availabilityDates.forEach((dateItem) => {
+    const option = document.createElement("option");
+    option.value = dateItem.date;
+    option.textContent = dateItem.label;
+    dateSelect.append(option);
   });
 
-  slotSelects.forEach((slotSelect) => {
-    const currentValue = slotSelect.value;
-    const index = slotSelect.dataset.preferenceIndex;
-    const dateSelect = [...dateSelects].find((select) => select.dataset.preferenceIndex === index);
-    const selectedDate = dateSelect?.value || "";
-    const daySlots = slotsByDate.get(selectedDate) || [];
+  if (currentDate && slotsByDate.has(currentDate)) {
+    dateSelect.value = currentDate;
+  }
 
-    slotSelect.innerHTML = '<option value="">時間を選択</option>';
+  const selectedDate = dateSelect.value;
+  const daySlots = slotsByDate.get(selectedDate) || [];
+  slotSelect.innerHTML = '<option value="">時間を選択</option>';
 
-    daySlots.forEach((slot) => {
-      const option = document.createElement("option");
-      option.value = slot.id;
-      option.textContent = reservedSlotIds.has(slot.id) ? `${slot.time}（受付済み）` : slot.time;
-      option.dataset.label = slot.label;
-      option.disabled = reservedSlotIds.has(slot.id);
-      slotSelect.append(option);
-    });
-
-    if (currentValue && [...slotSelect.options].some((option) => option.value === currentValue && !option.disabled)) {
-      slotSelect.value = currentValue;
-    }
-
-    slotSelect.disabled = !hasSlots || !selectedDate || daySlots.length === 0;
+  daySlots.forEach((slot) => {
+    const option = document.createElement("option");
+    option.value = slot.id;
+    option.textContent = slot.timeLabel || slot.time;
+    option.dataset.label = slot.label;
+    slotSelect.append(option);
   });
+
+  if (currentSlot && daySlots.some((slot) => slot.id === currentSlot)) {
+    slotSelect.value = currentSlot;
+  }
 
   const shouldDisableAll = availabilityLoadFailed || !hasSlots;
-  dateSelects.forEach((select) => {
-    select.disabled = shouldDisableAll;
-  });
-
-  if (shouldDisableAll) {
-    slotSelects.forEach((select) => {
-      select.disabled = true;
-    });
-  }
+  dateSelect.disabled = shouldDisableAll;
+  slotSelect.disabled = shouldDisableAll || !selectedDate || daySlots.length === 0;
 
   bookingForm?.querySelector('button[type="submit"]')?.toggleAttribute("disabled", shouldDisableAll);
 
@@ -319,12 +292,10 @@ const renderSlotSelects = () => {
   } else if (hasSlots) {
     setAvailabilityStatus("空いている日時だけを表示しています。日付を選ぶと、その日の時間を選べます。");
   }
-
-  updateDuplicateOptions();
 };
 
 const loadAvailability = async () => {
-  if (!bookingForm || slotSelects.length === 0) {
+  if (!bookingForm || !slotSelect || !dateSelect) {
     return;
   }
 
@@ -342,14 +313,14 @@ const loadAvailability = async () => {
     availabilitySlots = payload.slots || [];
     availabilityDates = payload.dates || [];
     availabilityLoadFailed = false;
-    renderSlotSelects();
+    renderSlotPicker();
   } catch (error) {
     console.error(error);
     availabilitySlots = [];
     availabilityDates = [];
     availabilityLoadFailed = true;
     setAvailabilityStatus("空き時間を取得できませんでした。時間をおいて再度お試しください。", true);
-    renderSlotSelects();
+    renderSlotPicker();
   }
 };
 
@@ -363,11 +334,9 @@ const slotIdToGoogleDate = (slotId, extraMinutes = 0) => {
 };
 
 const buildCalendarUrl = (reservation) => {
-  const preferenceIds = reservation.preferenceIds || [reservation.slotId];
-  const preferenceLabels = reservation.preferenceLabels || [reservation.slotLabel || "-", "-", "-"];
-  const firstSlot = reservation.confirmedSlotId || preferenceIds[0];
+  const firstSlot = reservation.confirmedSlotId || reservation.slotId || reservation.preferenceIds?.[0];
   const dates = `${slotIdToGoogleDate(firstSlot)}/${slotIdToGoogleDate(firstSlot, REVIA_SETTINGS.meetingMinutes)}`;
-    const details = [
+  const details = [
     `保護者氏名: ${reservation.guardian}`,
     `保護者氏名（ふりがな）: ${reservation.guardianKana || "未入力"}`,
     `生徒氏名: ${reservation.student}`,
@@ -375,11 +344,8 @@ const buildCalendarUrl = (reservation) => {
     `学年: ${reservation.grade}`,
     `希望科目: ${reservation.subject}`,
     `相談内容: ${reservation.memo || "未入力"}`,
-    `確定日時: ${reservation.confirmedSlotLabel || preferenceLabels[0]}`,
-    `第1希望: ${preferenceLabels[0]}`,
-    `第2希望: ${preferenceLabels[1]}`,
-    `第3希望: ${preferenceLabels[2]}`,
-    `ZoomURL: ${REVIA_SETTINGS.zoomUrl}`,
+    `確定日時: ${reservation.confirmedSlotLabel || reservation.slotLabel || reservation.preferenceLabels?.[0] || "-"}`,
+    `Zoom参加URL: ${reservation.zoomJoinUrl || "確認メールをご確認ください"}`,
     "持ち物: 成績表があればご準備ください",
     `面談時間: ${REVIA_SETTINGS.meetingMinutes}分程度`,
   ].join("\n");
@@ -400,17 +366,14 @@ const buildMailUrl = (reservation) => {
     "",
     "この度はオンライン家庭教師REVIAの無料相談にお申し込みいただき、誠にありがとうございます。",
     "",
-    "内容を確認のうえ、1〜2営業日以内にご連絡いたします。",
+    "以下の日時でご予約を承りました。",
+    `面談日時：${reservation.confirmedSlotLabel || reservation.slotLabel || "-"}`,
+    `Zoom参加URL：${reservation.zoomJoinUrl || "確認メールをご確認ください"}`,
     "",
-    "無料相談では、",
-    "・現在の学習状況",
-    "・お悩みや課題",
-    "・今後の学習方針",
-    "・オンライン授業について",
-    "などをお話しさせていただきます。",
+    "開始時刻になりましたら、上記URLからご参加ください。",
+    "待機室でお待ちいただく場合があります。",
     "",
-    "なお、体験授業は2,200円（税込）となります。",
-    "無料相談後、ご希望の場合に日程をご案内いたします。",
+    "ご都合が悪くなった場合は、REVIAまでご連絡ください。",
     "",
     "どうぞよろしくお願いいたします。",
     "",
@@ -420,7 +383,7 @@ const buildMailUrl = (reservation) => {
     "HP：https://revia.website/",
   ].join("\n");
   const params = new URLSearchParams({
-    subject: "【オンライン家庭教師REVIA】無料相談のお申し込みありがとうございます",
+    subject: "【REVIA】無料相談のご予約が確定しました",
     body,
   });
 
@@ -470,35 +433,26 @@ const renderReservations = () => {
 
   reservationList.innerHTML = reservations
     .map(
-      (reservation) => `
+      (reservation) => {
+        const zoomLink = reservation.zoomJoinUrl
+          ? `<a href="${escapeHtml(reservation.zoomJoinUrl)}" target="_blank" rel="noopener">Zoomに参加</a>`
+          : "";
+
+        return `
         <article class="reservation-item">
-          <strong>${escapeHtml(reservation.confirmedSlotLabel || reservation.preferenceLabels?.[0] || reservation.slotLabel)}</strong>
-          <span>第2希望: ${escapeHtml(reservation.preferenceLabels?.[1] || "-")}</span>
-          <span>第3希望: ${escapeHtml(reservation.preferenceLabels?.[2] || "-")}</span>
+          <strong>${escapeHtml(reservation.confirmedSlotLabel || reservation.slotLabel || reservation.preferenceLabels?.[0])}</strong>
           <span>${escapeHtml(reservation.guardian)}様（${escapeHtml(reservation.guardianKana || "-")}） / 生徒: ${escapeHtml(reservation.student)}（${escapeHtml(reservation.studentKana || "-")}）</span>
           <span>${escapeHtml(reservation.grade)} / ${escapeHtml(reservation.subject)} / ${escapeHtml(reservation.email)}</span>
           <div class="reservation-tools">
             <a href="${buildCalendarUrl(reservation)}" target="_blank" rel="noopener">Googleカレンダーに追加</a>
+            ${zoomLink}
             <a href="${buildMailUrl(reservation)}">確認メールを作成</a>
           </div>
         </article>
-      `,
+      `;
+      },
     )
     .join("");
-};
-
-const updateDuplicateOptions = () => {
-  const selectedValues = new Set([...slotSelects].map((select) => select.value).filter(Boolean));
-
-  slotSelects.forEach((select) => {
-    [...select.options].forEach((option) => {
-      if (!option.value || getReservedSlotIds().has(option.value)) {
-        return;
-      }
-
-      option.disabled = option.value !== select.value && selectedValues.has(option.value);
-    });
-  });
 };
 
 bookingForm?.addEventListener("submit", async (event) => {
@@ -515,30 +469,19 @@ bookingForm?.addEventListener("submit", async (event) => {
   }
 
   const data = new FormData(bookingForm);
-  const preferenceIds = [
-    data.get("preferredSlot1")?.toString(),
-    data.get("preferredSlot2")?.toString(),
-    data.get("preferredSlot3")?.toString(),
-  ];
-  const preferenceLabels = [...slotSelects].map((select) => select.selectedOptions[0]?.dataset.label || "");
-  const uniquePreferenceIds = new Set(preferenceIds);
-  const reservedSlotIds = getReservedSlotIds();
+  const slotId = data.get("bookingSlot")?.toString() || "";
+  const selectedSlot = getSlotById(slotId);
 
-  if (uniquePreferenceIds.size !== preferenceIds.length) {
-    bookingMessage.textContent = "第1〜第3希望は別々の日時を選択してください。";
-    return;
-  }
-
-  if (preferenceIds.some((slotId) => reservedSlotIds.has(slotId))) {
-    bookingMessage.textContent = "選択した日時に受付済みの枠があります。別の日時を選択してください。";
-    renderSlotSelects();
+  if (!selectedSlot) {
+    bookingMessage.textContent = SLOT_UNAVAILABLE_MESSAGE;
+    await loadAvailability();
     return;
   }
 
   const reservation = {
     id: crypto.randomUUID(),
-    preferenceIds,
-    preferenceLabels,
+    slotId,
+    slotLabel: selectedSlot.label,
     guardian: data.get("guardian")?.toString().trim(),
     guardianKana: data.get("guardianKana")?.toString().trim(),
     student: data.get("student")?.toString().trim(),
@@ -569,12 +512,18 @@ bookingForm?.addEventListener("submit", async (event) => {
 
   const confirmedReservation = {
     ...reservation,
-    confirmedSlotId: result.confirmedSlotId || reservation.preferenceIds[0],
-    confirmedSlotLabel: result.confirmedSlotLabel || reservation.preferenceLabels[0],
+    confirmedSlotId: result.confirmedSlotId || reservation.slotId,
+    confirmedSlotLabel: result.confirmedSlotLabel || reservation.slotLabel,
+    meetingStartIso: result.meetingStartIso || selectedSlot.startIso,
+    meetingEndIso: result.meetingEndIso || selectedSlot.endIso,
+    zoomJoinUrl: result.zoomJoinUrl || "",
   };
 
   saveReservations([confirmedReservation, ...reservations]);
   bookingMessage.textContent = FORM_SUCCESS_MESSAGE;
+  if (bookingCompleteTime) {
+    bookingCompleteTime.textContent = `面談日時：${confirmedReservation.confirmedSlotLabel}`;
+  }
   bookingForm.reset();
   resetKanaAssistState();
   bookingForm.hidden = true;
@@ -584,20 +533,12 @@ bookingForm?.addEventListener("submit", async (event) => {
   renderReservations();
 });
 
-slotSelects.forEach((select) => {
-  select.addEventListener("change", updateDuplicateOptions);
-});
+dateSelect?.addEventListener("change", () => {
+  if (slotSelect) {
+    slotSelect.value = "";
+  }
 
-dateSelects.forEach((select) => {
-  select.addEventListener("change", () => {
-    const targetSlot = [...slotSelects].find((slotSelect) => slotSelect.dataset.preferenceIndex === select.dataset.preferenceIndex);
-
-    if (targetSlot) {
-      targetSlot.value = "";
-    }
-
-    renderSlotSelects();
-  });
+  renderSlotPicker();
 });
 
 clearReservationsButton?.addEventListener("click", () => {
@@ -606,6 +547,9 @@ clearReservationsButton?.addEventListener("click", () => {
   resetKanaAssistState();
   bookingForm.hidden = false;
   bookingComplete.hidden = true;
+  if (bookingCompleteTime) {
+    bookingCompleteTime.textContent = "";
+  }
   loadAvailability();
   renderReservations();
 });

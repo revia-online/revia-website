@@ -1193,6 +1193,12 @@ li::before {
   font-weight: 900;
 }
 
+.slot-description {
+  margin: 0 0 12px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
 .slot-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1224,6 +1230,14 @@ li::before {
 
 .availability-grid {
   align-items: start;
+}
+
+.single-slot-picker {
+  grid-template-columns: minmax(0, 640px);
+}
+
+.single-slot-picker .preference-pair {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .preference-pair {
@@ -2003,6 +2017,10 @@ textarea:focus {
   .slot-grid,
   .preference-grid,
   .field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .single-slot-picker .preference-pair {
     grid-template-columns: 1fr;
   }
 

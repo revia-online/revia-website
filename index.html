@@ -678,46 +678,19 @@
 
             <fieldset class="slot-fieldset">
               <legend>希望日時</legend>
+              <p class="slot-description">現在予約可能な日時から、ご希望の時間を1つ選択してください。送信完了時に予約が確定します。</p>
               <p class="availability-status" id="availabilityStatus" role="status" aria-live="polite">空き時間を読み込み中です。</p>
-              <div class="preference-grid availability-grid" aria-live="polite">
+              <div class="preference-grid availability-grid single-slot-picker" aria-live="polite">
                 <div class="preference-pair">
                   <label>
-                    第1希望（日付）
-                    <select name="preferredDate1" class="date-select" data-preference-index="1" required>
+                    日付
+                    <select name="bookingDate" class="date-select" required>
                       <option value="">日付を選択</option>
                     </select>
                   </label>
                   <label>
-                    第1希望（時間）
-                    <select name="preferredSlot1" class="slot-select" data-preference-index="1" required>
-                      <option value="">時間を選択</option>
-                    </select>
-                  </label>
-                </div>
-                <div class="preference-pair">
-                  <label>
-                    第2希望（日付）
-                    <select name="preferredDate2" class="date-select" data-preference-index="2" required>
-                      <option value="">日付を選択</option>
-                    </select>
-                  </label>
-                  <label>
-                    第2希望（時間）
-                    <select name="preferredSlot2" class="slot-select" data-preference-index="2" required>
-                      <option value="">時間を選択</option>
-                    </select>
-                  </label>
-                </div>
-                <div class="preference-pair">
-                  <label>
-                    第3希望（日付）
-                    <select name="preferredDate3" class="date-select" data-preference-index="3" required>
-                      <option value="">日付を選択</option>
-                    </select>
-                  </label>
-                  <label>
-                    第3希望（時間）
-                    <select name="preferredSlot3" class="slot-select" data-preference-index="3" required>
+                    時間
+                    <select name="bookingSlot" class="slot-select" required>
                       <option value="">時間を選択</option>
                     </select>
                   </label>
@@ -739,8 +712,9 @@
           </form>
 
           <div class="booking-complete" id="bookingComplete" hidden>
-            <h3>無料相談のお申し込みありがとうございます。</h3>
-            <p>内容を確認し、1〜2営業日以内にご連絡いたします。</p>
+            <h3>無料相談のご予約が確定しました。</h3>
+            <p id="bookingCompleteTime"></p>
+            <p>Zoom参加URLを、ご登録のメールアドレスへお送りしました。</p>
             <a class="button primary full" href="#top">トップへ戻る</a>
           </div>
 
