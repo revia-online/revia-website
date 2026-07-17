@@ -578,15 +578,31 @@ function createCalendarEvent_(reservation, slot) {
 
 function saveToSheet_(reservation) {
   const properties = PropertiesService.getScriptProperties();
-  let spreadsheetId = clean_(REVIA_SETTINGS.spreadsheetId) || clean_(properties.getProperty("SPREADSHEET_ID"));
+  const configuredSpreadsheetId = clean_(REVIA_SETTINGS.spreadsheetId);
+  const storedSpreadsheetId = clean_(properties.getProperty("SPREADSHEET_ID"));
+  let spreadsheet = null;
 
-  if (!spreadsheetId) {
-    const createdSpreadsheet = SpreadsheetApp.create("REVIA 無料相談予約");
-    spreadsheetId = createdSpreadsheet.getId();
-    properties.setProperty("SPREADSHEET_ID", spreadsheetId);
+  if (configuredSpreadsheetId) {
+    try {
+      spreadsheet = SpreadsheetApp.openById(configuredSpreadsheetId);
+    } catch (error) {
+      console.error(`REVIA_SETTINGS.spreadsheetIdを開けませんでした: ${safeErrorMessage_(error)}`);
+    }
   }
 
-  const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+  if (!spreadsheet && storedSpreadsheetId) {
+    try {
+      spreadsheet = SpreadsheetApp.openById(storedSpreadsheetId);
+    } catch (error) {
+      console.error(`スクリプトプロパティSPREADSHEET_IDを開けませんでした: ${safeErrorMessage_(error)}`);
+      properties.deleteProperty("SPREADSHEET_ID");
+    }
+  }
+
+  if (!spreadsheet) {
+    spreadsheet = SpreadsheetApp.create("REVIA 無料相談予約");
+    properties.setProperty("SPREADSHEET_ID", spreadsheet.getId());
+  }
 
   if (!spreadsheet) {
     throw new Error("保存先のGoogleスプレッドシートが見つかりません。");
