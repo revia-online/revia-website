@@ -190,7 +190,7 @@ function doPost(event) {
     return json_({
       ok: false,
       code: "booking_failed",
-      message: `実際のエラー：${safeErrorMessage_(error)}`,
+      message: "予約処理中にエラーが発生しました。恐れ入りますが、時間をおいて再度お試しください。",
     });
   } finally {
     if (lockAcquired) {
