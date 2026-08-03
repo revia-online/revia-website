@@ -121,7 +121,7 @@ iframe {
 }
 
 .hero-content {
-  width: min(640px, 100%);
+  width: min(720px, 100%);
 }
 
 .eyebrow {
@@ -147,9 +147,26 @@ h1 {
   line-height: 1.08;
 }
 
+.hero-principle {
+  margin: 0 0 14px;
+  color: var(--blue-800);
+  font-size: clamp(1rem, 1.6vw, 1.18rem);
+  font-weight: 900;
+}
+
+.hero-service-title {
+  max-width: 720px;
+  font-size: clamp(2.15rem, 4vw, 2.85rem);
+  line-height: 1.2;
+}
+
+.hero-service-title span {
+  display: block;
+}
+
 .hero-copy {
-  max-width: 600px;
-  margin: 26px 0 34px;
+  max-width: 680px;
+  margin: 22px 0 30px;
   color: #33445d;
   font-size: clamp(1.02rem, 1.6vw, 1.18rem);
 }
@@ -418,6 +435,93 @@ h1 {
   gap: 12px;
 }
 
+.learning-design-section {
+  background: var(--white);
+}
+
+.learning-design-heading {
+  max-width: 840px;
+}
+
+.learning-design-lead {
+  margin: 16px 0 10px;
+  color: var(--blue-950);
+  font-size: clamp(1.08rem, 2vw, 1.3rem);
+  font-weight: 900;
+  line-height: 1.6;
+}
+
+.learning-design-heading .section-copy {
+  margin-top: 0;
+}
+
+.learning-design-flow {
+  display: grid;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.learning-design-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+  min-width: 0;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--cyan-50);
+  box-shadow: 0 10px 24px rgba(20, 83, 154, 0.07);
+}
+
+.learning-design-step:not(:last-child) {
+  margin-bottom: 18px;
+}
+
+.learning-design-step:not(:last-child)::after {
+  position: absolute;
+  bottom: -19px;
+  left: 43px;
+  width: 2px;
+  height: 18px;
+  background: var(--blue-500);
+  content: "";
+}
+
+.learning-design-number {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  color: var(--white);
+  font-size: 0.82rem;
+  font-weight: 900;
+  line-height: 1;
+  border-radius: 8px;
+  background: var(--blue-800);
+}
+
+.learning-design-step h3 {
+  margin: 0;
+  color: var(--blue-950);
+  font-size: 1.08rem;
+  line-height: 1.4;
+}
+
+.learning-design-step p {
+  margin: 3px 0 0;
+  color: var(--muted);
+}
+
+.learning-design-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  max-width: 860px;
+  margin: 30px auto 0;
+}
+
 .feature-card,
 .price-card,
 .leader-card,
@@ -460,6 +564,22 @@ h1 {
 .pricing-note {
   margin: 0;
   color: var(--muted);
+}
+
+.reasons-section {
+  background: var(--cyan-50);
+}
+
+.reasons-grid .feature-card {
+  height: 100%;
+}
+
+.feature-card .feature-note {
+  margin-top: 16px;
+  padding-top: 14px;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  border-top: 1px solid var(--line);
 }
 
 .promise-section {
@@ -519,12 +639,13 @@ h1 {
 }
 
 .leader-profile {
+  max-width: 1080px;
   padding: 24px;
 }
 
 .leader-profile-inner {
   display: grid;
-  grid-template-columns: minmax(132px, 0.42fr) minmax(0, 1fr);
+  grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
   gap: 22px;
   align-items: start;
 }
@@ -2053,11 +2174,21 @@ textarea:focus {
     padding-bottom: 48px;
   }
 
+  .hero-service-title {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  .hero-principle {
+    margin-bottom: 10px;
+  }
+
   .hero-actions .button,
   .youtube-section .button,
   .campaign-cta .button,
   .campaign-diagnosis .button,
   .fit-actions .button,
+  .learning-design-actions .button,
   .diagnosis-quick-panel .button,
   .diagnosis-link-panel .button,
   .diagnosis-actions .button,
@@ -2137,6 +2268,26 @@ textarea:focus {
     flex-direction: column;
   }
 
+  .learning-design-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .learning-design-step {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .learning-design-number {
+    width: 44px;
+    height: 44px;
+  }
+
+  .learning-design-step:not(:last-child)::after {
+    left: 37px;
+  }
+
   .feature-card,
   .fit-card,
   .leader-card,
@@ -2149,6 +2300,15 @@ textarea:focus {
   .booking-panel,
   .contact-form {
     padding: 24px;
+  }
+
+  .leader-profile-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .leader-photo {
+    width: min(72vw, 240px);
+    justify-self: center;
   }
 
   .diagnosis-options {
@@ -2203,6 +2363,11 @@ textarea:focus {
   h1 {
     font-size: 2.05rem;
     line-height: 1.16;
+  }
+
+  .hero-service-title {
+    font-size: 1.85rem;
+    line-height: 1.22;
   }
 
   .hero-copy {
