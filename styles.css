@@ -667,6 +667,74 @@ h1 {
   font-weight: 900;
 }
 
+.leader-section-title span {
+  display: block;
+}
+
+.leader-guidance {
+  color: #40516a;
+}
+
+.leader-experience {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--cyan-50);
+}
+
+.leader-experience h4 {
+  margin: 0 0 12px;
+  color: var(--blue-950);
+  font-size: 1rem;
+}
+
+.leader-experience ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.leader-experience li {
+  position: relative;
+  min-width: 0;
+  padding-left: 18px;
+  color: #40516a;
+}
+
+.leader-experience li::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--blue-600);
+  font-weight: 900;
+  content: "✓";
+}
+
+.leader-consultation {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.leader-consultation p {
+  max-width: 650px;
+  margin: 0;
+  color: var(--blue-950);
+  font-weight: 800;
+}
+
+.leader-consultation .button {
+  flex: 0 0 auto;
+}
+
 .cases-section {
   background: var(--white);
 }
@@ -681,7 +749,7 @@ h1 {
 
 .cases-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 18px;
   min-width: 0;
 }
@@ -708,6 +776,52 @@ h1 {
 .case-card p {
   margin: 0;
   color: #40516a;
+}
+
+.case-card > .case-index {
+  width: auto;
+  height: auto;
+  justify-self: start;
+  padding: 8px 10px;
+  line-height: 1.2;
+}
+
+.case-story {
+  display: grid;
+  gap: 0;
+}
+
+.case-story-item {
+  display: grid;
+  grid-template-columns: 78px minmax(0, 1fr);
+  gap: 12px;
+  min-width: 0;
+  padding: 13px 0;
+  border-top: 1px solid var(--line);
+}
+
+.case-story-item h4 {
+  margin: 0;
+  color: var(--blue-800);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.case-story-result p {
+  color: var(--blue-950);
+  font-weight: 800;
+}
+
+.case-clarification {
+  padding-top: 12px;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  border-top: 1px solid var(--line);
+}
+
+.case-card-interview p {
+  padding-top: 13px;
+  border-top: 1px solid var(--line);
 }
 
 .results-panel {
@@ -2309,6 +2423,19 @@ textarea:focus {
   .leader-photo {
     width: min(72vw, 240px);
     justify-self: center;
+  }
+
+  .leader-experience ul {
+    grid-template-columns: 1fr;
+  }
+
+  .leader-consultation {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .leader-consultation .button {
+    width: 100%;
   }
 
   .diagnosis-options {
