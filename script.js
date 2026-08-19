@@ -200,23 +200,7 @@ const fetchAvailabilityJsonp = () =>
     document.body.append(script);
   });
 
-const fetchAvailability = async () => {
-  try {
-    const response = await fetch(getAvailabilityUrl(), {
-      method: "GET",
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      throw new Error("空き時間の取得に失敗しました。");
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.warn(error);
-    return fetchAvailabilityJsonp();
-  }
-};
+const fetchAvailability = () => fetchAvailabilityJsonp();
 
 const getSlotsByDate = () =>
   availabilitySlots.reduce((groups, slot) => {
