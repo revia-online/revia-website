@@ -735,6 +735,19 @@ h1 {
   flex: 0 0 auto;
 }
 
+.leader-business-contact {
+  margin: 14px 0 0;
+  text-align: right;
+}
+
+.leader-business-contact a {
+  color: var(--blue-800);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .activity-section {
   padding-top: clamp(52px, 7vw, 72px);
   padding-bottom: clamp(52px, 7vw, 72px);
@@ -1793,6 +1806,156 @@ textarea:focus {
   font-weight: 800;
 }
 
+.business-contact-hero a {
+  color: var(--blue-800);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.business-contact-section {
+  padding-top: 48px;
+}
+
+.business-contact-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(360px, 1.22fr);
+  gap: clamp(32px, 6vw, 72px);
+  align-items: start;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.business-contact-copy h2 {
+  margin: 0 0 18px;
+  color: var(--blue-950);
+  font-size: clamp(1.65rem, 3vw, 2.45rem);
+  line-height: 1.35;
+}
+
+.business-contact-copy > p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.business-contact-note {
+  margin-top: 28px;
+  padding: 18px 20px;
+  color: #40516a;
+  border-left: 4px solid var(--blue-600);
+  background: var(--cyan-50);
+}
+
+.business-contact-note strong {
+  color: var(--blue-950);
+}
+
+.business-contact-note p {
+  margin: 6px 0 8px;
+}
+
+.business-contact-note a,
+.privacy-consent a,
+.business-contact-fallback a {
+  color: var(--blue-800);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.business-contact-form {
+  position: relative;
+}
+
+.field-label {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.required-label,
+.optional-label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 22px;
+  padding: 2px 7px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  line-height: 1;
+  border-radius: 4px;
+}
+
+.required-label {
+  color: var(--white);
+  background: var(--blue-600);
+}
+
+.optional-label {
+  color: var(--muted);
+  border: 1px solid var(--line);
+  background: var(--white);
+}
+
+.privacy-consent {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.privacy-consent input {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  min-height: 20px;
+  margin-top: 3px;
+  padding: 0;
+}
+
+.business-contact-honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.business-contact-submit {
+  width: 100%;
+}
+
+.business-contact-submit:disabled {
+  color: #64748b;
+  border-color: #d8e2ea;
+  background: #e8eef3;
+  box-shadow: none;
+  cursor: wait;
+}
+
+.business-contact-form .form-message {
+  white-space: pre-line;
+}
+
+.business-contact-form .form-message.is-success {
+  color: #17603a;
+}
+
+.business-contact-form .form-message.is-error {
+  color: #9d2c2c;
+}
+
+.business-contact-fallback {
+  margin: -10px 0 0;
+  color: var(--muted);
+}
+
+.business-contact-fallback[hidden] {
+  display: none;
+}
+
 .footer {
   display: flex;
   flex-wrap: wrap;
@@ -2319,7 +2482,8 @@ textarea:focus {
   .diagnosis-result-grid,
   .diagnosis-recommendation,
   .booking-layout,
-  .contact-section {
+  .contact-section,
+  .business-contact-layout {
     grid-template-columns: 1fr;
   }
 
@@ -2546,6 +2710,10 @@ textarea:focus {
 
   .leader-consultation .button {
     width: 100%;
+  }
+
+  .leader-business-contact {
+    text-align: center;
   }
 
   .activity-item {
