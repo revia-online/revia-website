@@ -740,6 +740,61 @@ h1 {
   margin: 0;
 }
 
+.section.book-section {
+  padding-top: 0;
+  padding-bottom: 48px;
+}
+
+.book-panel {
+  display: grid;
+  grid-template-columns: 156px minmax(0, 1fr);
+  gap: 28px;
+  align-items: center;
+  max-width: 1080px;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--cyan-50);
+}
+
+.book-cover {
+  display: block;
+  width: 156px;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.book-details {
+  min-width: 0;
+}
+
+.book-details h2 {
+  margin: 0 0 10px;
+  color: var(--blue-950);
+  font-size: clamp(1.2rem, 2vw, 1.45rem);
+  line-height: 1.4;
+}
+
+.book-subtitle {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.book-description {
+  margin: 12px 0 18px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.book-amazon-link {
+  min-height: 44px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+
 .leader-consultation {
   display: flex;
   gap: 20px;
@@ -2758,6 +2813,17 @@ textarea:focus {
 
   .leader-experience ul {
     grid-template-columns: 1fr;
+  }
+
+  .book-panel {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 22px;
+  }
+
+  .book-cover {
+    width: 120px;
+    justify-self: center;
   }
 
   .leader-consultation {
