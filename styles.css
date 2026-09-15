@@ -212,22 +212,50 @@ h1 {
 
 .diagnosis-quick-actions {
   display: grid;
+  width: min(100%, 340px);
+  gap: 14px;
+  justify-self: end;
+  justify-items: stretch;
+}
+
+.diagnosis-quick-actions > .button {
+  width: 100%;
+}
+
+.diagnosis-quick-test-cta {
+  display: grid;
   gap: 10px;
-  justify-items: center;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
 }
 
-.diagnosis-quick-sub-link {
-  color: var(--blue-800);
-  font-size: 0.92rem;
+.diagnosis-quick-test-cta p {
+  margin: 0;
+}
+
+.diagnosis-quick-test-badge {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  justify-self: start;
+  padding: 4px 10px;
+  color: var(--blue-950);
+  font-size: 0.78rem;
   font-weight: 800;
-  text-decoration: underline;
-  text-decoration-color: var(--line);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 4px;
+  line-height: 1.4;
+  background: #fff1a8;
+  border: 1px solid #e1bf54;
+  border-radius: 999px;
 }
 
-.diagnosis-quick-sub-link:hover {
-  text-decoration-color: var(--blue-600);
+.diagnosis-quick-test-copy {
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.diagnosis-quick-actions .button:focus-visible {
+  outline: 3px solid #7dd3fc;
+  outline-offset: 3px;
 }
 
 .button {
@@ -2665,6 +2693,10 @@ textarea:focus {
     grid-template-columns: 1fr;
   }
 
+  .diagnosis-quick-actions {
+    justify-self: start;
+  }
+
   .price-card.featured {
     transform: none;
   }
@@ -2724,11 +2756,6 @@ textarea:focus {
   .diagnosis-quick-actions {
     width: 100%;
     justify-items: stretch;
-  }
-
-  .diagnosis-quick-sub-link {
-    padding: 4px 0;
-    text-align: center;
   }
 
   .important-submit {
