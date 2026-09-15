@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>テスト勉強ステップアップ診断｜オンライン家庭教師REVIA</title>
+    <meta
+      name="description"
+      content="23問で今回のテスト勉強を振り返り、良かったところ、次に改善したいところ、次のテストで最初に変えることを確認できる無料診断です。"
+    />
+    <link rel="canonical" href="https://www.revia.website/test-study-diagnosis.html" />
+    <meta property="og:title" content="テスト勉強ステップアップ診断｜オンライン家庭教師REVIA" />
+    <meta
+      property="og:description"
+      content="23問で今回のテスト勉強を振り返り、次のテストで続けること・変えることを確認できます。"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.revia.website/test-study-diagnosis.html" />
+    <meta property="og:image" content="https://www.revia.website/assets/hero-online-tutoring.png" />
+    <meta property="og:site_name" content="オンライン家庭教師REVIA" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="テスト勉強ステップアップ診断｜オンライン家庭教師REVIA" />
+    <meta
+      name="twitter:description"
+      content="23問で今回のテスト勉強を振り返り、次のテストで続けること・変えることを確認できます。"
+    />
+    <meta name="twitter:image" content="https://www.revia.website/assets/hero-online-tutoring.png" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="apple-touch-icon" href="favicon.png" />
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-734S14C7HR"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-734S14C7HR");
+    </script>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="test-study-diagnosis.css" />
+  </head>
+  <body class="test-study-diagnosis-body">
+    <header class="site-header">
+      <a class="brand" href="index.html" aria-label="REVIA トップへ">
+        <span class="brand-mark">R</span>
+        <span>
+          <strong>REVIA</strong>
+          <small>オンライン家庭教師</small>
+        </span>
+      </a>
+      <nav class="nav" aria-label="主要メニュー">
+        <a href="index.html#features">特徴</a>
+        <a href="index.html#pricing">料金</a>
+        <a href="diagnosis.html">診断</a>
+        <a href="/column/">コラム</a>
+        <a href="index.html#booking">無料相談</a>
+      </nav>
+    </header>
+
+    <main class="test-diagnosis-page" id="test-diagnosis">
+      <section class="test-diagnosis-hero" aria-labelledby="test-diagnosis-title">
+        <div class="test-diagnosis-hero-inner">
+          <p class="eyebrow">TEST STUDY CHECK</p>
+          <h1 id="test-diagnosis-title">テスト勉強<br class="mobile-break" />ステップアップ診断</h1>
+          <p class="test-diagnosis-hero-lead">
+            今回のテスト勉強の<br />
+            <strong>「良かったところ」と「次に変えるところ」</strong><br />
+            を確認してみませんか？
+          </p>
+          <p class="test-diagnosis-question-count">23問の質問から、今回のテスト勉強を振り返ります。</p>
+          <button class="button primary important-submit" id="testDiagnosisStart" type="button" aria-controls="testDiagnosisForm">
+            無料で診断する
+          </button>
+        </div>
+      </section>
+
+      <section class="section test-diagnosis-section" aria-labelledby="test-diagnosis-guide-title">
+        <div class="test-diagnosis-shell">
+          <div class="test-diagnosis-guide" id="testDiagnosisGuide">
+            <p class="eyebrow">診断前にご確認ください</p>
+            <h2 id="test-diagnosis-guide-title">点数だけで良い・悪いを決める診断ではありません</h2>
+            <p>この診断は、テストの点数だけで良い・悪いを判断するものではありません。</p>
+            <p>今回どのように勉強したかを振り返り、次のテストで何を続け、何を変えるかを考えるための診断です。</p>
+          </div>
+
+          <noscript>
+            <p class="form-message test-diagnosis-noscript">診断を利用するには、ブラウザのJavaScriptを有効にしてください。</p>
+          </noscript>
+
+          <form class="diagnosis-form test-diagnosis-form" id="testDiagnosisForm" novalidate hidden>
+            <div class="test-diagnosis-progress" aria-labelledby="testDiagnosisStepHeading">
+              <div class="test-diagnosis-progress-copy" aria-live="polite">
+                <span id="testDiagnosisPage">1 / 6</span>
+                <span id="testDiagnosisStepLabel">準備・スタート</span>
+              </div>
+              <div
+                class="test-diagnosis-progress-track"
+                id="testDiagnosisProgress"
+                role="progressbar"
+                aria-label="診断の進捗"
+                aria-valuemin="1"
+                aria-valuemax="6"
+                aria-valuenow="1"
+              >
+                <span></span>
+              </div>
+            </div>
+
+            <div class="test-diagnosis-step-heading">
+              <p class="eyebrow">今回のテスト勉強を振り返る</p>
+              <h2 id="testDiagnosisStepHeading" tabindex="-1">準備・スタート</h2>
+              <p class="test-diagnosis-step-note" id="testDiagnosisStepNote" hidden>
+                ※この3問は、あなたに合った結果コメントを表示するために使用します。
+              </p>
+            </div>
+
+            <div class="diagnosis-questions" id="testDiagnosisQuestions"></div>
+
+            <p class="form-message test-diagnosis-message" id="testDiagnosisMessage" role="alert" aria-live="assertive"></p>
+
+            <div class="test-diagnosis-navigation">
+              <button class="button secondary" id="testDiagnosisBack" type="button" hidden>前へ</button>
+              <button class="button primary" id="testDiagnosisNext" type="button">次へ</button>
+              <button class="button primary important-submit" id="testDiagnosisSubmit" type="submit" hidden>
+                診断結果を見る
+              </button>
+            </div>
+          </form>
+
+          <article class="test-diagnosis-result" id="testDiagnosisResult" tabindex="-1" aria-live="polite" hidden></article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-info">
+        <p>&copy; 2026 REVIA Online Tutoring. All rights reserved.</p>
+        <p>運営: オンライン家庭教師REVIA</p>
+        <p>代表者: 原田靖也</p>
+        <p>所在地: 兵庫県姫路市</p>
+        <p>電話番号: 請求があった場合、遅滞なく開示いたします。</p>
+        <p>メールアドレス: <a href="mailto:revia2026.mail@gmail.com">revia2026.mail@gmail.com</a></p>
+        <p>お問い合わせ: 無料相談フォームまたはメールよりお願いいたします。</p>
+      </div>
+      <nav class="footer-links" aria-label="フッターリンク">
+        <a href="legal.html">特定商取引法表記</a>
+        <a href="terms.html">利用規約</a>
+        <a href="privacy.html">プライバシーポリシー</a>
+      </nav>
+    </footer>
+
+    <script src="test-study-diagnosis-config.js"></script>
+    <script src="test-study-diagnosis.js"></script>
+  </body>
+</html>

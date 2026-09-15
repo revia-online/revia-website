@@ -210,6 +210,26 @@ h1 {
   color: var(--muted);
 }
 
+.diagnosis-quick-actions {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.diagnosis-quick-sub-link {
+  color: var(--blue-800);
+  font-size: 0.92rem;
+  font-weight: 800;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.diagnosis-quick-sub-link:hover {
+  text-decoration-color: var(--blue-600);
+}
+
 .button {
   display: inline-flex;
   align-items: center;
@@ -2699,6 +2719,16 @@ textarea:focus {
   .contact-form .button {
     width: 100%;
     min-height: 52px;
+  }
+
+  .diagnosis-quick-actions {
+    width: 100%;
+    justify-items: stretch;
+  }
+
+  .diagnosis-quick-sub-link {
+    padding: 4px 0;
+    text-align: center;
   }
 
   .important-submit {
