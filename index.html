@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja">
+<html class="home-page" lang="ja">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -40,8 +40,8 @@
     <link rel="stylesheet" href="styles.css" />
     <link rel="stylesheet" href="column.css" />
   </head>
-  <body>
-    <header class="site-header">
+  <body class="home-page">
+    <header class="site-header home-site-header">
       <a class="brand" href="#top" aria-label="REVIA トップへ">
         <span class="brand-mark">R</span>
         <span>
@@ -49,15 +49,30 @@
           <small>オンライン家庭教師</small>
         </span>
       </a>
-      <nav class="nav" aria-label="主要メニュー">
+      <nav class="nav home-desktop-nav" aria-label="主要メニュー">
         <a href="#features">特徴</a>
         <a href="#pricing">料金</a>
         <a href="diagnosis.html">診断</a>
+        <a href="/test-study-diagnosis.html">テスト勉強診断</a>
         <a href="/column/">コラム</a>
         <a href="#faq">FAQ</a>
-        <a href="#booking">面談予約</a>
         <a href="#booking">無料相談</a>
       </nav>
+      <details class="home-mobile-nav">
+        <summary class="home-mobile-nav-toggle">
+          <span class="home-mobile-nav-icon" aria-hidden="true"></span>
+          <span>メニュー</span>
+        </summary>
+        <nav class="nav home-mobile-nav-links" aria-label="スマートフォン用主要メニュー">
+          <a href="#features">特徴</a>
+          <a href="#pricing">料金</a>
+          <a href="diagnosis.html">診断</a>
+          <a href="/test-study-diagnosis.html">テスト勉強診断</a>
+          <a href="/column/">コラム</a>
+          <a href="#faq">FAQ</a>
+          <a href="#booking">無料相談</a>
+        </nav>
+      </details>
     </header>
 
     <main id="top">
@@ -905,6 +920,14 @@
       <a class="primary" href="#booking" data-ga-event="sticky_booking_click">無料相談</a>
     </nav>
 
+    <script>
+      (() => {
+        const mobileMenu = document.querySelector(".home-mobile-nav");
+        mobileMenu?.querySelectorAll("a").forEach((link) => {
+          link.addEventListener("click", () => mobileMenu.removeAttribute("open"));
+        });
+      })();
+    </script>
     <script src="vendor/vanilla-autokana.js"></script>
     <script src="script.js"></script>
   </body>
