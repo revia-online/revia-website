@@ -1556,6 +1556,15 @@ li::before {
   font-size: 0.94rem;
 }
 
+.consultation-guide.tuition-support-summary {
+  margin-top: 32px;
+  margin-bottom: 0;
+}
+
+.tuition-support-summary .pricing-link {
+  margin-top: 18px;
+}
+
 .faq-section {
   background: var(--white);
 }
@@ -2296,6 +2305,44 @@ textarea:focus {
   gap: 14px;
   align-items: center;
   margin-top: 28px;
+}
+
+.tuition-support-page {
+  background: var(--cyan-50);
+}
+
+.tuition-support-content-section {
+  padding-top: 48px;
+  background: linear-gradient(180deg, var(--cyan-50), var(--white));
+}
+
+.tuition-support-copy {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.tuition-support-copy > section + section {
+  margin-top: clamp(30px, 5vw, 46px);
+  padding-top: clamp(30px, 5vw, 46px);
+  border-top: 1px solid var(--line);
+}
+
+.tuition-support-copy h2 {
+  font-size: clamp(1.3rem, 2.4vw, 1.8rem);
+}
+
+.tuition-support-copy .fit-summary {
+  margin-top: 18px;
+}
+
+.tuition-support-copy .fit-summary p {
+  max-width: none;
+}
+
+.tuition-support-cta-actions {
+  display: grid;
+  width: min(100%, 300px);
+  gap: 10px;
 }
 
 .diagnosis-page {
