@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <!--
+    REVIA testimonial icon set.
+    All symbols share the same 96 x 96 viewBox, line weight, palette, and facial style.
+    Add a new symbol only when a genuinely new reusable attribute group is needed.
+  -->
+  <symbol id="unknown" viewBox="0 0 96 96">
+    <circle cx="48" cy="33" r="15" fill="#fff8ee" stroke="#14539a" stroke-width="3.5" />
+    <path d="M22 81c3-19 13-29 26-29s23 10 26 29" fill="#bde7fa" stroke="#14539a" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" />
+    <circle cx="42" cy="33" r="1.8" fill="#0b2447" />
+    <circle cx="54" cy="33" r="1.8" fill="#0b2447" />
+    <path d="M43 41c3 2 7 2 10 0" fill="none" stroke="#14539a" stroke-linecap="round" stroke-width="2" />
+  </symbol>
+
+  <symbol id="elementary-male" viewBox="0 0 96 96">
+    <path d="M32 29c1-12 8-18 17-18 8 0 15 5 17 16-9-3-20-2-34 2Z" fill="#4f637b" stroke="#14539a" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="48" cy="35" r="15" fill="#fff8ee" stroke="#14539a" stroke-width="3.5" />
+    <path d="M25 81c3-18 12-28 23-28s20 10 23 28" fill="#7ccdf0" stroke="#14539a" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" />
+    <path d="M39 55l9 8 9-8" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="42" cy="35" r="1.7" fill="#0b2447" /><circle cx="54" cy="35" r="1.7" fill="#0b2447" />
+    <path d="M43 43c3 2 7 2 10 0" fill="none" stroke="#14539a" stroke-linecap="round" stroke-width="2" />
+  </symbol>
+
+  <symbol id="elementary-female" viewBox="0 0 96 96">
+    <path d="M28 42c0-20 8-31 20-31s20 11 20 31l-5 12H33l-5-12Z" fill="#64748b" stroke="#14539a" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="48" cy="35" r="14" fill="#fff8ee" stroke="#14539a" stroke-width="3.5" />
+    <path d="M25 81c3-18 12-28 23-28s20 10 23 28" fill="#94d8f3" stroke="#14539a" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" />
+    <path d="M39 55l9 8 9-8" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="42" cy="35" r="1.7" fill="#0b2447" /><circle cx="54" cy="35" r="1.7" fill="#0b2447" />
+    <path d="M43 43c3 2 7 2 10 0" fill="none" stroke="#14539a" stroke-linecap="round" stroke-width="2" />
+  </symbol>
+
+  <symbol id="junior-high-male" viewBox="0 0 96 96">
+    <path d="M30 31c1-13 8-21 18-21 9 0 16 6 19 18l-9-5-7 5-7-5-14 8Z" fill="#455a72" stroke="#14539a" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="48" cy="36" r="15" fill="#fff8ee" stroke="#14539a" stroke-width="3.5" />
+    <path d="M23 82c3-20 13-30 25-30s22 10 25 30" fill="#79c7ea" stroke="#14539a" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" />
+    <path d="M37 54l11 10 11-10M48 64v13" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="42" cy="36" r="1.7" fill="#0b2447" /><circle cx="54" cy="36" r="1.7" fill="#0b2447" />
+    <path d="M43 44c3 2 7 2 10 0" fill="none" stroke="#14539a" stroke-linecap="round" stroke-width="2" />
+  </symbol>
+
+  <symbol id="junior-high-female" viewBox="0 0 96 96">
+    <path d="M27 43c0-22 8-33 21-33s21 11 21 33l-7 13H34l-7-13Z" fill="#52667f" stroke="#14539a" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="48" cy="36" r="14.5" fill="#fff8ee" stroke="#14539a" stroke-width="3.5" />
+    <path d="M23 82c3-20 13-30 25-30s22 10 25 30" fill="#8fd5ef" stroke="#14539a" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" />
+    <path d="M36 55l12 10 12-10M40 65h16" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="42" cy="36" r="1.7" fill="#0b2447" /><circle cx="54" cy="36" r="1.7" fill="#0b2447" />
+    <path d="M43 44c3 2 7 2 10 0" fill="none" stroke="#14539a" stroke-linecap="round" stroke-width="2" />
+  </symbol>
+
+  <symbol id="high-school-male" viewBox="0 0 96 96">
+    <path d="M29 31c1-14 8-22 19-22 10 0 17 6 20 19l-10-6-8 6-7-5-14 8Z" fill="#3f536c" stroke="#14539a" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="48" cy="36" r="15" fill="#fff8ee" stroke="#14539a" stroke-width="3.5" />
+    <path d="M21 83c4-21 14-31 27-31s23 10 27 31" fill="#6bbde3" stroke="#14539a" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" />
+    <path d="M36 54l12 11 12-11M48 65l-4 13h8l-4-13Z" fill="#ffffff" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" />
+    <circle cx="42" cy="36" r="1.7" fill="#0b2447" /><circle cx="54" cy="36" r="1.7" fill="#0b2447" />
+    <path d="M43 44c3 2 7 2 10 0" fill="none" stroke="#14539a" stroke-linecap="round" stroke-width="2" />
+  </symbol>
+
+  <symbol id="high-school-female" viewBox="0 0 96 96">
+    <path d="M26 44c0-23 9-35 22-35s22 12 22 35l-7 14H33l-7-14Z" fill="#4d6179" stroke="#14539a" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="48" cy="36" r="14.5" fill="#fff8ee" stroke="#14539a" stroke-width="3.5" />
+    <path d="M21 83c4-21 14-31 27-31s23 10 27 31" fill="#78c8e9" stroke="#14539a" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" />
+    <path d="M35 55l13 11 13-11M48 66l-4 12h8l-4-12Z" fill="#ffffff" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" />
+    <circle cx="42" cy="36" r="1.7" fill="#0b2447" /><circle cx="54" cy="36" r="1.7" fill="#0b2447" />
+    <path d="M43 44c3 2 7 2 10 0" fill="none" stroke="#14539a" stroke-linecap="round" stroke-width="2" />
+  </symbol>
+
+  <symbol id="university-male" viewBox="0 0 96 96">
+    <path d="M29 31c1-14 8-22 19-22 11 0 18 7 20 20l-12-7-8 6-7-5-12 8Z" fill="#43576f" stroke="#14539a" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="48" cy="36" r="15" fill="#fff8ee" stroke="#14539a" stroke-width="3.5" />
+    <path d="M20 83c4-21 15-31 28-31s24 10 28 31" fill="#9bcfe6" stroke="#14539a" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" />
+    <path d="M35 55l13 12 13-12M39 61l9 15 9-15" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="42" cy="36" r="1.7" fill="#0b2447" /><circle cx="54" cy="36" r="1.7" fill="#0b2447" />
+    <path d="M43 44c3 2 7 2 10 0" fill="none" stroke="#14539a" stroke-linecap="round" stroke-width="2" />
+  </symbol>
+
+  <symbol id="university-female" viewBox="0 0 96 96">
+    <path d="M25 44c0-23 9-35 23-35s23 12 23 35l-8 15H33L25 44Z" fill="#53677f" stroke="#14539a" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="48" cy="36" r="14.5" fill="#fff8ee" stroke="#14539a" stroke-width="3.5" />
+    <path d="M20 83c4-21 15-31 28-31s24 10 28 31" fill="#a7d8ec" stroke="#14539a" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" />
+    <path d="M35 55l13 12 13-12M39 61l9 15 9-15" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="42" cy="36" r="1.7" fill="#0b2447" /><circle cx="54" cy="36" r="1.7" fill="#0b2447" />
+    <path d="M43 44c3 2 7 2 10 0" fill="none" stroke="#14539a" stroke-linecap="round" stroke-width="2" />
+  </symbol>
+
+  <symbol id="adult-male" viewBox="0 0 96 96">
+    <path d="M29 31c1-14 8-22 19-22 11 0 18 7 20 20l-10-5-9 5-8-5-12 7Z" fill="#3e526b" stroke="#14539a" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="48" cy="36" r="15" fill="#fff8ee" stroke="#14539a" stroke-width="3.5" />
+    <path d="M19 83c4-21 15-31 29-31s25 10 29 31" fill="#4fa9d6" stroke="#14539a" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" />
+    <path d="M34 55l14 13 14-13M48 68v11" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="42" cy="36" r="1.7" fill="#0b2447" /><circle cx="54" cy="36" r="1.7" fill="#0b2447" />
+    <path d="M43 44c3 2 7 2 10 0" fill="none" stroke="#14539a" stroke-linecap="round" stroke-width="2" />
+  </symbol>
+
+  <symbol id="adult-female" viewBox="0 0 96 96">
+    <path d="M25 44c0-23 9-35 23-35s23 12 23 35l-8 15H33L25 44Z" fill="#4b6079" stroke="#14539a" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="48" cy="36" r="14.5" fill="#fff8ee" stroke="#14539a" stroke-width="3.5" />
+    <path d="M19 83c4-21 15-31 29-31s25 10 29 31" fill="#65b9df" stroke="#14539a" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" />
+    <path d="M34 55l14 13 14-13M40 62h16" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="42" cy="36" r="1.7" fill="#0b2447" /><circle cx="54" cy="36" r="1.7" fill="#0b2447" />
+    <path d="M43 44c3 2 7 2 10 0" fill="none" stroke="#14539a" stroke-linecap="round" stroke-width="2" />
+  </symbol>
+
+  <symbol id="parent-male" viewBox="0 0 96 96">
+    <path d="M29 31c1-14 8-22 19-22 11 0 18 7 20 20l-9-4-10 4-8-5-12 7Z" fill="#43576f" stroke="#14539a" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="48" cy="36" r="15" fill="#fff8ee" stroke="#14539a" stroke-width="3.5" />
+    <path d="M18 83c5-21 16-31 30-31s25 10 30 31" fill="#77c4e5" stroke="#14539a" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" />
+    <path d="M33 55l15 13 15-13M38 61l10 16 10-16" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="42" cy="36" r="1.7" fill="#0b2447" /><circle cx="54" cy="36" r="1.7" fill="#0b2447" />
+    <path d="M43 44c3 2 7 2 10 0" fill="none" stroke="#14539a" stroke-linecap="round" stroke-width="2" />
+  </symbol>
+
+  <symbol id="parent-female" viewBox="0 0 96 96">
+    <path d="M24 45c0-24 9-36 24-36s24 12 24 36l-9 15H33L24 45Z" fill="#52677f" stroke="#14539a" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="48" cy="36" r="14.5" fill="#fff8ee" stroke="#14539a" stroke-width="3.5" />
+    <path d="M18 83c5-21 16-31 30-31s25 10 30 31" fill="#8ccfe9" stroke="#14539a" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.5" />
+    <path d="M33 55l15 13 15-13M39 62h18" fill="none" stroke="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" />
+    <circle cx="42" cy="36" r="1.7" fill="#0b2447" /><circle cx="54" cy="36" r="1.7" fill="#0b2447" />
+    <path d="M43 44c3 2 7 2 10 0" fill="none" stroke="#14539a" stroke-linecap="round" stroke-width="2" />
+  </symbol>
+</svg>

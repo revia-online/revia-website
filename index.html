@@ -462,6 +462,64 @@
         </div>
       </section>
 
+      <section class="section testimonials-section" aria-labelledby="testimonials-title">
+        <div class="section-heading testimonials-heading">
+          <p class="eyebrow">Testimonials</p>
+          <h2 id="testimonials-title">生徒・保護者の体験談</h2>
+          <p class="testimonials-intro">これまで原田がオンライン指導を担当した生徒・保護者の方からいただいた声をご紹介します。</p>
+          <p class="testimonials-note">※REVIA開業前の指導事例を含みます。</p>
+        </div>
+
+        <div
+          class="testimonials-carousel"
+          data-testimonials-carousel
+          role="region"
+          aria-roledescription="カルーセル"
+          aria-labelledby="testimonials-title"
+        >
+          <div class="testimonials-stage" data-testimonials-stage>
+            <article class="testimonial-card testimonial-fallback" data-testimonial-fallback>
+              <div class="testimonial-profile">
+                <span class="testimonial-person-icon testimonial-person-icon-parent" data-icon-key="parent-female" aria-hidden="true">
+                  <svg viewBox="0 0 96 96" focusable="false">
+                    <use href="assets/testimonials/person-icons.svg#parent-female"></use>
+                  </svg>
+                </span>
+                <div class="testimonial-profile-details">
+                  <span class="testimonial-badge testimonial-type-badge">保護者</span>
+                  <span class="testimonial-badge testimonial-location-badge">広島県在住</span>
+                  <p class="testimonial-attribute">中学3年生の保護者</p>
+                </div>
+              </div>
+              <div class="testimonial-content">
+                <span class="testimonial-quote" aria-hidden="true">“</span>
+                <h3>受験直前の不安の中、予定通り指導していただけたことが本当にありがたかったです</h3>
+                <div class="testimonial-body">
+                  <p>受験直前に決断し、約1か月間の短期で申し込んだ会社が倒産となり、目の前が真っ暗になりました。</p>
+                  <p>そんな中、原田先生から無償で予定通り授業をすると言っていただいたことは、本当にありがたかったです。</p>
+                  <p>本人はもともと勉強をしたくなかったこともあり、最初は「もういい」と言っていました。それでも授業の時間になるとZoomにつないでいたので、親としても安心しました。</p>
+                  <p>勉強のクセがついたかと言えば、受験後は全く勉強しておりません。ただ今回、家族でも先生でも友達でもない方からご指導いただいたことは、息子にとって良い経験になったと思います。</p>
+                  <p>原田先生に教えていただいたことで、これまで「分からないことを分からないままやり過ごしてきた」ということを、本人も認識できたのではないかと感じています。</p>
+                  <p>これからも勉強はついて回ります。今回の経験を、これからに生かしていってくれたらと思います。</p>
+                  <p>ありがとうございました。</p>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="testimonials-controls" data-testimonials-controls hidden>
+            <button class="testimonial-arrow" type="button" data-testimonial-prev aria-label="前の体験談を表示">
+              <span aria-hidden="true">←</span>
+            </button>
+            <div class="testimonial-dots" data-testimonial-dots aria-label="体験談を選択"></div>
+            <button class="testimonial-arrow" type="button" data-testimonial-next aria-label="次の体験談を表示">
+              <span aria-hidden="true">→</span>
+            </button>
+          </div>
+          <p class="testimonials-status" data-testimonial-status aria-live="polite" aria-atomic="true"></p>
+        </div>
+      </section>
+
       <section class="section pricing-section" id="pricing">
         <div class="section-heading">
           <p class="eyebrow">料金表</p>
@@ -965,6 +1023,7 @@
         });
       })();
     </script>
+    <script src="testimonials.js"></script>
     <script src="vendor/vanilla-autokana.js"></script>
     <script src="script.js"></script>
   </body>
