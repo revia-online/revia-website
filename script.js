@@ -16,7 +16,7 @@ const kanaTargetInputs = document.querySelectorAll("[data-kana-target]");
 // Zoom認証情報はブラウザ側に置かず、Google Apps Scriptのスクリプトプロパティで管理します。
 const REVIA_SETTINGS = {
   reservationStorageKey: "reviaReservations",
-  bookingEndpoint: "https://script.google.com/macros/s/AKfycbyoyrNNydZm6qPz6NeALZoSIVmcF5MkIVbONhIWLmbEqK-nc65E6ZiRIaNwiaCIPXkp/exec",
+  bookingEndpoint: "https://script.google.com/macros/s/AKfycby0G_eo1o7f5l4cmGCyv6laCeDaGOu0ASA9NizlDZTHXnDt0Fqk3Sdg9YuykynQ2kCM/exec",
   contactEmail: "revia2026.mail@gmail.com",
   meetingMinutes: 30,
   prices: {
