@@ -40,6 +40,24 @@
       ],
       year: "pre-opening",
     },
+    {
+      id: "student-okayama-junior-high-3",
+      type: "student",
+      gender: "male",
+      schoolStage: "junior-high",
+      relationship: null,
+      prefecture: "岡山県",
+      attribute: "指導当時：中学3年生・男子",
+      title: "サッカーと両立しながら、自分の予定に合わせて指導してもらえました",
+      body: [
+        "小学校からずっとサッカーを頑張ってきて、中学3年生になってもほとんど勉強していなかったので、オンライン家庭教師にお世話になることになりました。",
+        "最初の先生とは合わず、先生の変更で教えてくれたのが原田先生でした。遠征や試合があるときも振替をしてくれたり、僕の予定を一生懸命考えてくれたりして、とても助かりました。",
+        "たまに雑談でトレーニングの話になると、先生がめちゃくちゃいっぱい教えてくれて、それも楽しかったです！",
+        "最後は志望校を下げたので、最初に考えていた学校とは違う高校を受験しました。それでも、原田先生に教えてもらっていなかったら、今の高校にも合格できなかったと思います。",
+        "今は学校生活もとても楽しいです。高校でもサッカーを頑張っています！",
+      ],
+      year: "pre-opening",
+    },
   ];
 
   const testimonialTypeLabels = {
@@ -105,15 +123,12 @@
     icon.dataset.iconKey = iconKey;
     icon.setAttribute("aria-hidden", "true");
 
-    const svgNamespace = "http://www.w3.org/2000/svg";
-    const svg = document.createElementNS(svgNamespace, "svg");
-    svg.setAttribute("viewBox", "0 0 96 96");
-    svg.setAttribute("focusable", "false");
-
-    const use = document.createElementNS(svgNamespace, "use");
-    use.setAttribute("href", `assets/testimonials/person-icons.svg#${iconKey}`);
-    svg.append(use);
-    icon.append(svg);
+    const image = document.createElement("img");
+    image.src = `assets/testimonials/icons/${iconKey}.png`;
+    image.alt = "";
+    image.loading = "lazy";
+    image.decoding = "async";
+    icon.append(image);
     return icon;
   };
 
