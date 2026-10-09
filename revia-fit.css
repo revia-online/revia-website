@@ -1,0 +1,23 @@
+/* Scoped additions; existing shared styles remain unchanged. */
+.revia-fit-page .section { max-width: 1120px; margin-inline: auto; }
+.revia-fit-page .section-heading p { max-width: 780px; margin-inline: auto; }
+.revia-fit-page h2, .revia-fit-page h3 { overflow-wrap: anywhere; }
+.revia-fit-page [id] { scroll-margin-top: 120px; }
+.revia-fit-page .revia-fit-subtitle { font-weight: 700; color: var(--blue-950); }
+.revia-fit-toc { display: flex; flex-wrap: wrap; gap: 12px 20px; margin-top: 24px; }
+.revia-fit-toc a, .revia-fit-followup a { color: var(--blue-800); text-decoration: underline; text-underline-offset: 4px; }
+.revia-fit-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.revia-fit-grid .feature-card { min-width: 0; }
+.revia-fit-grid h3 { font-size: 1.15rem; line-height: 1.65; }
+.revia-fit-page .learning-design-flow ol { padding-left: 1.5em; margin-bottom: 0; }
+.revia-fit-followup { margin-top: 24px; }
+.revia-fit-exception { margin-top: 18px; padding: 16px; background: var(--cyan-50); border-left: 3px solid var(--blue-600); border-radius: 8px; }
+.revia-fit-page a:focus-visible { outline: 3px solid var(--blue-600); outline-offset: 4px; }
+@media (max-width: 700px) {
+  .revia-fit-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .revia-fit-page .learning-design-flow { grid-template-columns: minmax(0, 1fr); }
+  .revia-fit-page .tuition-support-cta-actions .button { width: 100%; white-space: normal; text-align: center; }
+}
+.revia-fit-page .learning-design-flow li { padding-left: 0; }
+.revia-fit-page .learning-design-flow li::before { content: none; }
+.revia-fit-page .legal-hero-inner { margin-inline: auto; }
