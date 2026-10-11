@@ -204,7 +204,7 @@ const buildMailUrl = (reservation) => {
     "",
     "オンライン家庭教師REVIA",
     "代表　原田 靖也",
-    "Mail：revia2026.mail@gmail.com",
+    "Mail：info@revia.website",
     "HP：https://revia.website/",
   ].join("\n");
   const params = new URLSearchParams({

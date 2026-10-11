@@ -12,6 +12,8 @@ const BUSINESS_CONTACT_SETTINGS = {
   requestTimeoutMs: 15000,
 };
 
+const BUSINESS_CONTACT_PUBLIC_EMAIL = "info@revia.website";
+
 const BUSINESS_CONTACT_FAILURE_MESSAGE =
   "送信できませんでした。時間をおいて再度お試しいただくか、メールにてお問い合わせください。";
 let configuredContactEmail = BUSINESS_CONTACT_SETTINGS.fallbackEmail;
@@ -24,8 +26,8 @@ const setBusinessContactEmail = (email) => {
   }
 
   configuredContactEmail = normalizedEmail;
-  businessContactEmail.textContent = normalizedEmail;
-  businessContactEmail.href = `mailto:${normalizedEmail}`;
+  businessContactEmail.textContent = BUSINESS_CONTACT_PUBLIC_EMAIL;
+  businessContactEmail.href = `mailto:${BUSINESS_CONTACT_PUBLIC_EMAIL}`;
 };
 
 setBusinessContactEmail(BUSINESS_CONTACT_SETTINGS.fallbackEmail);
