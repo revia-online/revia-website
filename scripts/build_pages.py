@@ -13,6 +13,20 @@ from urllib.parse import urljoin, urlsplit, unquote
 ROOT = Path(__file__).resolve().parents[1]
 
 
+PREVIEW_SUCCESS = "模擬予約テストが完了しました。実際の予約は確定していません。"
+PREVIEW_NO_MAIL = "メールは送信していません。Zoom参加URLも発行していません。"
+
+
+def preview_html(data):
+    text = data.decode('utf-8')
+    text = text.replace('<div class="booking-complete" id="bookingComplete" hidden>',
+        '<p role="note">検証環境：実際の予約・メール送信・Zoom発行は行いません。入力にはテストデータを使用してください。</p>\n'
+        '<div class="booking-complete" id="bookingComplete" hidden>')
+    text = text.replace('無料相談のご予約が確定しました。', PREVIEW_SUCCESS)
+    text = text.replace('Zoom参加URLを、ご登録のメールアドレスへお送りしました。', PREVIEW_NO_MAIL)
+    return text.encode('utf-8')
+
+
 def build(root=ROOT, output=None, production=False):
     output = output or root / 'dist'
     require(output.resolve() == (root/'dist').resolve(), 'INVALID_OUTPUT')
@@ -38,6 +52,8 @@ def build(root=ROOT, output=None, production=False):
     routes, public = {}, []
     for path in html_paths:
         data = (root/path).read_bytes()
+        if not production and path == 'index.html':
+            data = preview_html(data)
         asset = '/__pages_html/' + hashlib.sha256(data).hexdigest() + '.bin'
         (output/asset.lstrip('/')).write_bytes(data)
         routes['/'+path] = asset
@@ -63,6 +79,9 @@ def build(root=ROOT, output=None, production=False):
             p=output/name
             p.write_text(re.sub(r'https://script\.google\.com/macros/s/[^"\s]+/exec',
                                'https://PLACEHOLDER.invalid/__qa/booking',p.read_text()).replace('"https://PLACEHOLDER.invalid/__qa/booking"','window.location.origin + "/__qa/booking"'))
+        p=output/'script.js'
+        p.write_text(p.read_text().replace('無料相談のご予約が確定しました。', PREVIEW_SUCCESS)
+                     .replace('Zoom参加URLを、ご登録のメールアドレスへお送りしました。', PREVIEW_NO_MAIL))
     worker=(root/'cloudflare/worker.template.js').read_text()
     worker=worker.replace('__ROUTES__',json.dumps(routes)).replace('__PUBLIC_FILES__',json.dumps(sorted(set(public)))).replace('__PRODUCTION_APPROVED__','true' if production else 'false')
     (output/'_worker.js').write_text(worker)

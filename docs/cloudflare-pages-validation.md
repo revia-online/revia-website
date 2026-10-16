@@ -26,7 +26,7 @@ Git連携のPagesプロジェクトを作成し、対象リポジトリだけを
 | Secret/有料bindings | 検証環境では不要 |
 | Production approval flag | 未設定 |
 
-`REVIA_PAGES_PRODUCTION_APPROVED=true`と`CF_PAGES_BRANCH=main`がそろう場合のみ本番向け出力になる。今回はどちらも有効にしない。検証用の全ホストに対しHTMLはWorker、静的ファイルは`_headers`で`X-Robots-Tag: noindex, nofollow, noarchive`を付ける。robots.txtは全クロール拒否。noindexはアクセス制限ではないため、非公開物の保護はdistへの非出力で行う。HTMLには手を加えず、プレビュー側のCSPでGA4、外部通信、フォーム遷移、YouTube iframeを遮断する。JS出力のGAS URLを同一オリジンの模擬APIへ差替える。本番向けJSは原本と同一。YouTubeと本番GA4/GASの実動作はこのプレビューだけでは確認できない。
+`REVIA_PAGES_PRODUCTION_APPROVED=true`と`CF_PAGES_BRANCH=main`がそろう場合のみ本番向け出力になる。今回はどちらも有効にしない。検証用の全ホストに対しHTMLはWorker、静的ファイルは`_headers`で`X-Robots-Tag: noindex, nofollow, noarchive`を付ける。robots.txtは全クロール拒否。noindexはアクセス制限ではないため、非公開物の保護はdistへの非出力で行う。本番原本は保持し、検証トップの出力だけに模擬予約の注意書き・未送信の完了文を追加する。プレビュー側のCSPでGA4、外部通信、フォーム遷移、YouTube iframeを遮断する。JS出力のGAS URLを同一オリジンの模擬APIへ差替える。本番向けJSは原本と同一。YouTubeと本番GA4/GASの実動作はこのプレビューだけでは確認できない。
 
 ## URL・公開ファイルの保全
 
@@ -101,3 +101,12 @@ HTMLのURL維持にFunctionsを使うためHTMLアクセスはWorkers Freeと共
 6. **P1** 公開用認証・権限・通知・手動担当者と07:10確認、6記事後の停止確認を設定する（本番有効化は承認後のみ）。
 
 現段階では本番切替を推奨しない。間に合わない場合は現行本番を維持し、予約公開を有効にしない。
+
+
+## P2修正（2026-10-16、検証ブランチ限定）
+
+- HTTP検証は `REVIA-pages-validation/1.0` を全リクエストに明示する。標準Python署名では403/1010、同一ホスト・明示UAでは200を再現。Cloudflareセキュリティは変更しない。失敗時はステータス・cf-ray等を表示し、管理画面ログと照合する。特定ルール名までは未照合。
+- 模擬slot IDを既存 `slotIdToGoogleDate` の期待する `2026-10-20T10:00` に統一する。表示ラベルと開始・終了ISOも同じ30分枠に揃える。NodeでWorker応答と実サイトのカレンダー関数を組み合わせた回帰検査を行う。
+- 検証ビルドのトップHTMLとscript.jsの完了文だけに「実際の予約は確定していません」「メールは送信していません。Zoom参加URLも発行していません。」を設定する。送信前にも検証注意書きを表示する。本番ビルドのHTML・JSは原本一致をテストする。
+- 既存HTML全件原本一致の規則は、検証トップの上記意図的変更のみ例外となる。HTTP検証は同じ変換済み期待値と比較する。
+- 検証用GAS差替え、GA4遮断CSP、noindex/robots、非公開物許可リストは継続する。main、DNS、Vercel、独自ドメイン、有料設定を変更しない。

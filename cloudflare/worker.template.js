@@ -16,7 +16,7 @@ export default {
     if (preview && url.pathname === '/__qa/booking') {
       if (!['GET','HEAD','POST'].includes(request.method)) return new Response(null,{status:405,headers});
       const date = '2026-10-20';
-      const payload = {ok:true,testOnly:true,slots:[{id:'20261020T100000',date,time:'10:00',timeLabel:'10:00〜10:30（テスト）',label:'テスト枠'}],dates:[{date,label:"2026年10月20日（テスト）"}],contactEmail:'test@example.invalid',message:'TEST ONLY: no real booking'};
+      const payload = {ok:true,testOnly:true,slots:[{id:'2026-10-20T10:00',date,time:'10:00',timeLabel:'10:00〜10:30（テスト）',label:'2026年10月20日 10:00〜10:30（テスト）',startIso:'2026-10-20T10:00:00+09:00',endIso:'2026-10-20T10:30:00+09:00'}],dates:[{date,label:"2026年10月20日（テスト）"}],contactEmail:'test@example.invalid',message:'TEST ONLY: no real booking'};
       if (request.method === 'POST') {
         // Do not parse, echo, log or retain submitted personal data.
         return Response.json({ok:true,testOnly:true,message:'TEST ONLY: no real booking'},{headers:{...headers,'Cache-Control':'no-store'}});

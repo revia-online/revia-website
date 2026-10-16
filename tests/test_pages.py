@@ -19,11 +19,13 @@ class PagesTests(unittest.TestCase):
         shutil.copytree(ROOT,self.root,ignore=shutil.ignore_patterns('.git','dist','.wrangler','__pycache__','tmp'))
     def tearDown(self):self.tmp.cleanup()
 
-    def test_html_bytes_canonical_ga4_preserved(self):
+    def test_html_bytes_preserved_except_preview_completion(self):
         routes,_=b.build(self.root)
         for route,asset in routes.items():
             if route.endswith('.html') and route!='/404.html':
-                self.assertEqual((self.root/route.lstrip('/')).read_bytes(),(self.root/'dist'/asset.lstrip('/')).read_bytes())
+                expected=(self.root/route.lstrip('/')).read_bytes()
+                if route=='/index.html': expected=b.preview_html(expected)
+                self.assertEqual(expected,(self.root/'dist'/asset.lstrip('/')).read_bytes())
         self.assertEqual(routes['/'],routes['/index.html'])
         self.assertEqual(routes['/column/'],routes['/column/index.html'])
 
@@ -69,6 +71,18 @@ class PagesTests(unittest.TestCase):
         b.build(self.root,production=True)
         for name in ('script.js','contact.js'):
             self.assertEqual((self.root/name).read_bytes(),(self.root/'dist'/name).read_bytes())
+
+    def test_preview_completion_and_production_html(self):
+        original=(self.root/'index.html').read_bytes()
+        routes,_=b.build(self.root)
+        preview=(self.root/'dist'/routes['/index.html'].lstrip('/')).read_text()
+        self.assertIn(b.PREVIEW_SUCCESS,preview)
+        self.assertIn(b.PREVIEW_NO_MAIL,preview)
+        self.assertNotIn('メールアドレスへお送りしました',preview)
+        self.assertIn(b.PREVIEW_SUCCESS,(self.root/'dist/script.js').read_text())
+        self.assertEqual(original,(self.root/'index.html').read_bytes())
+        routes,_=b.build(self.root,production=True)
+        self.assertEqual(original,(self.root/'dist'/routes['/index.html'].lstrip('/')).read_bytes())
 
     def test_future_ledger_and_unsafe_output_rejected(self):
         record={'path':'column/2026-10-test-20.html','assets_sha256':{}}
