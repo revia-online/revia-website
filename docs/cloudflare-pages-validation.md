@@ -26,7 +26,7 @@ Git連携のPagesプロジェクトを作成し、対象リポジトリだけを
 | Secret/有料bindings | 検証環境では不要 |
 | Production approval flag | 未設定 |
 
-`REVIA_PAGES_PRODUCTION_APPROVED=true`と`CF_PAGES_BRANCH=main`がそろう場合のみ本番向け出力になる。今回はどちらも有効にしない。検証用の全ホストに対しHTMLはWorker、静的ファイルは`_headers`で`X-Robots-Tag: noindex, nofollow, noarchive`を付ける。robots.txtは全クロール拒否。noindexはアクセス制限ではないため、非公開物の保護はdistへの非出力で行う。本番原本は保持し、検証トップの出力だけに模擬予約の注意書き・未送信の完了文を追加する。プレビュー側のCSPでGA4、外部通信、フォーム遷移、YouTube iframeを遮断する。JS出力のGAS URLを同一オリジンの模擬APIへ差替える。本番向けJSは原本と同一。YouTubeと本番GA4/GASの実動作はこのプレビューだけでは確認できない。
+`REVIA_PAGES_MODE=production`・承認・main・本番プロジェクト識別の全条件がそろう場合だけ本番向け出力になる（詳細は末尾）。今回、実環境の変数は変更しない。検証用の全ホストに対しHTMLはWorker、静的ファイルは`_headers`で`X-Robots-Tag: noindex, nofollow, noarchive`を付ける。robots.txtは全クロール拒否。noindexはアクセス制限ではないため、非公開物の保護はdistへの非出力で行う。本番原本は保持し、検証トップの出力だけに模擬予約の注意書き・未送信の完了文を追加する。プレビュー側のCSPでGA4、外部通信、フォーム遷移、YouTube iframeを遮断する。JS出力のGAS URLを同一オリジンの模擬APIへ差替える。本番向けJSは原本と同一。YouTubeと本番GA4/GASの実動作はこのプレビューだけでは確認できない。
 
 ## URL・公開ファイルの保全
 
@@ -110,3 +110,57 @@ HTMLのURL維持にFunctionsを使うためHTMLアクセスはWorkers Freeと共
 - 検証ビルドのトップHTMLとscript.jsの完了文だけに「実際の予約は確定していません」「メールは送信していません。Zoom参加URLも発行していません。」を設定する。送信前にも検証注意書きを表示する。本番ビルドのHTML・JSは原本一致をテストする。
 - 既存HTML全件原本一致の規則は、検証トップの上記意図的変更のみ例外となる。HTTP検証は同じ変換済み期待値と比較する。
 - 検証用GAS差替え、GA4遮断CSP、noindex/robots、非公開物許可リストは継続する。main、DNS、Vercel、独自ドメイン、有料設定を変更しない。
+
+
+## ① 本番への検証設定混入防止（2026-10-17、検証ブランチ限定）
+
+今回はビルド・検査コードとローカル合成テストだけを追加した。main反映、本番プロジェクト作成/設定、DNS、Vercel、実GAS、予約・メール・Zoom、コラム公開変数、有料設定は変更しない。既存の検証ビルドコマンドとGitHub CIはそのまま再利用する。
+
+### 設定不一致はビルド失敗
+
+`build_pages.py` は以下をすべて満たす場合だけ本番出力を作り、最後に成果物検査を自動実行する。検査失敗は非ゼロ終了し、生成途中の本番distを削除する。
+
+| 条件 | 必須値 |
+|---|---|
+| `REVIA_PAGES_MODE` | `production` |
+| `REVIA_PAGES_PRODUCTION_APPROVED` | `true` |
+| `CF_PAGES_BRANCH` | Pagesが渡す実際の `main` |
+| `REVIA_PAGES_PRODUCTION_PROJECT` | 将来、承認・確定した本番専用プロジェクト名。検証名は禁止 |
+| `CF_PAGES_URL` | Pagesが渡す本番専用プロジェクトのHTTPS pages.dev URL（デプロイ固有サブドメインも可） |
+
+本番プロジェクト名は未確定なので、今回名前を設定・作成しない。Pages組み込みのbranch/URLを手動で偽装しない。これらの変数はビルド時の誤設定検出であり、管理者に対する認証機構ではない。[Pagesビルド変数と終了コード](https://developers.cloudflare.com/pages/configuration/build-configuration/)
+
+モードなし/`validation` は従来の検証出力を維持する。ただし承認true、main、未知のPagesプロジェクトURL、未知のモード/承認値は停止する。Pages実行なのにURLがない場合も停止する。既存の `revia-website-validation` とそのデプロイ/ブランチURLだけはモード未設定で引き続き検証ビルドできる。ローカルではPages変数なしで検証ビルドできる。本番設定を落として黙って検証出力へ戻る運用は許可しない。
+
+### 成果物検査とHTTP検査
+
+`verify_pages_production.py` の既定動作はオフラインのdist検査。HTML16・静的47と公開台帳のファイルを再利用し、原本とのバイト一致、Workerの本番フラグ/ルート、静的headers、公開対象外ファイル、meta noindex/none、模擬予約API/テスト用完了文、全拒否robots、検証用CSP混入を検出する。Workerソース中の検証専用分岐自体は残すが、本番www応答で有効にならないことを実Workerの自動テストで確認する。未知のCSPはレビューが必要な変更として停止する。
+
+```sh
+# 常時ローカルで実施可能。実サービスへ接続しない
+python3 -m unittest discover -s tests -v
+python3 scripts/build_pages.py   # 通常は検証dist
+
+# 本番distのオフライン検査（本番distが準備済みの場合）
+python3 scripts/verify_pages_production.py
+
+# 将来、対象コミットと本番操作の承認を照合した担当者が明示的に実行
+# 現在の検証distに対する上の検査は失敗するのが正常
+python3 scripts/verify_pages_production.py --http --output /private/path/production-http.json
+```
+
+`--http` だけが正式ホストへの通信を開始する。HTTPS www/非www、HTTP www/非wwwだけを対象にGET/HEADし、外部ホストへの転送は追わない。通常の証明書検証を維持する。JSやフォームを実行せず、GAS・GA4・メール・Zoomを呼び出さず、POST機能も持たない。CIから実HTTPを自動実行しない。
+
+既存の全HTML/静的ファイルは200・Content-Type・原本バイト一致・noindexなし・CSPなしを確認。トップ/コラムの別名とHEAD、非公開物/模擬APIの404も検査する。4系統×トップ/コラム/既存記事/不存在URLの20ケースで、HTTPS wwwへの301/308による収束、パス・クエリ維持、最大5段、ループなし、最終200/404を確認する。302/307は本番の恒久転送条件として不合格とする。現在の許可リストでは96検査レコード（内部リクエスト数とは異なる）。公開台帳が増えれば対象も増える。HTTP正常表示とはHTML/資産の配信整合を指し、描画や実予約成功の保証ではない。
+
+`--root` は承認済みデプロイSHAと一致するチェックアウトを指定する。ハッシュ一致だけでCloudflare由来と証明できないため、実際のDeployment SHA・成功状態も担当者が別に照合する。HTTPエラーは非ゼロ終了、成功時だけJSONを書き込む。古い成功JSONを現実行の結果と混同しない。
+
+### ローカル自動テストと限界
+
+既存39テストに6テストを追加。設定576組合せ、誤設定CLI失敗、正常設定CLI成功、原本/成果物へのnoindex・模擬文・通信遮断・ルート/JS改変等の故障注入を含む。ローカルだけの架空Pages変数をCLIテストに渡し、実環境の設定は変更しない。
+
+NodeのHTTP fixtureは生成した実WorkerとローカルASSETSを実行する。新しい本番HTTP検査96件と、既存 `verify_pages_preview.py` の75件・付随検査を再利用し、検証側のnoindex/robots/CSP/模擬API GET・合成POST・JSONP/POST制限と、本番側の原本配信/QA 404を確認する。追加の異常応答テストはHTTP noindex、遮断CSP、誤Content-Type、503、外部転送、クエリ消失、転送ループを拒否する。
+
+fixture上のHTTP/apex転送は最終設計の期待動作をモデル化したもの。実Cloudflareのルール・証明書・DNSを設定/検証した証跡ではない。ローカルで受入条件をテストできるようにした段階であり、実HTTP検査は本番構成準備後に別途必要。検証保護の再確認はローカル実Workerに対するもの。生成物以外の実Pages設定は変更しない。
+
+本番成果物をpages.dev等の非正式ホストから非公開応答にする設計、非www転送の実設定、Fail closed、承認下の実機能検証などは引き続き残課題。本項の実装だけで本番切替可能とは判定しない。

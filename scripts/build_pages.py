@@ -27,9 +27,7 @@ def preview_html(data):
     return text.encode('utf-8')
 
 
-def build(root=ROOT, output=None, production=False):
-    output = output or root / 'dist'
-    require(output.resolve() == (root/'dist').resolve(), 'INVALID_OUTPUT')
+def public_paths(root):
     manifest = json.loads((root/'config/pages-public.json').read_text())
     articles = list(manifest['existing_articles'])
     static = list(manifest['existing_static'])
@@ -47,6 +45,20 @@ def build(root=ROOT, output=None, production=False):
         require(parts[0] not in ('google-apps-script','tmp','work','scripts','tests','docs','config','cloudflare','publication','scheduled','drafts','node_modules','revia-site-vercel-drop-20260704'), 'NONPUBLIC_FILE_IN_MANIFEST')
         require(Path(path).suffix.lower() in ('.html','.css','.js','.png','.jpg','.jpeg','.webp','.svg','.webmanifest','.xml','.txt'), 'NONPUBLIC_FILE_IN_MANIFEST')
     require(all((root/p).is_file() for p in html_paths), 'PUBLIC_FILE_MISSING')
+    return html_paths, sorted(set(static))
+
+
+def render_worker(root, routes, public, production):
+    return ((root/'cloudflare/worker.template.js').read_text()
+            .replace('__ROUTES__',json.dumps(routes))
+            .replace('__PUBLIC_FILES__',json.dumps(sorted(set(public))))
+            .replace('__PRODUCTION_APPROVED__','true' if production else 'false'))
+
+
+def build(root=ROOT, output=None, production=False):
+    output = output or root / 'dist'
+    require(output.resolve() == (root/'dist').resolve(), 'INVALID_OUTPUT')
+    html_paths, static = public_paths(root)
     if output.exists(): shutil.rmtree(output)
     (output/'__pages_html').mkdir(parents=True)
     routes, public = {}, []
@@ -82,8 +94,7 @@ def build(root=ROOT, output=None, production=False):
         p=output/'script.js'
         p.write_text(p.read_text().replace('無料相談のご予約が確定しました。', PREVIEW_SUCCESS)
                      .replace('Zoom参加URLを、ご登録のメールアドレスへお送りしました。', PREVIEW_NO_MAIL))
-    worker=(root/'cloudflare/worker.template.js').read_text()
-    worker=worker.replace('__ROUTES__',json.dumps(routes)).replace('__PUBLIC_FILES__',json.dumps(sorted(set(public)))).replace('__PRODUCTION_APPROVED__','true' if production else 'false')
+    worker=render_worker(root, routes, public, production)
     (output/'_worker.js').write_text(worker)
     (output/'_routes.json').write_text(json.dumps({'version':1,'include':['/*'],'exclude':['/images/*','/assets/*','/vendor/*','/*.css','/*.js','/*.png','/*.webmanifest']}))
     # Functions responses set their own headers; this also covers static assets
@@ -92,10 +103,19 @@ def build(root=ROOT, output=None, production=False):
     if not production:
         headers+='  X-Robots-Tag: noindex, nofollow, noarchive\n'
     (output/'_headers').write_text(headers)
+    if production:
+        from verify_pages_production import verify_artifacts
+        try:
+            verify_artifacts(root, output)
+        except Exception:
+            # A rejected artifact must not remain available for an accidental upload.
+            shutil.rmtree(output)
+            raise
     return routes,public
 
 
 if __name__=='__main__':
-    production=os.environ.get('REVIA_PAGES_PRODUCTION_APPROVED')=='true' and os.environ.get('CF_PAGES_BRANCH')=='main'
+    from verify_pages_production import production_mode
+    production=production_mode(os.environ)
     routes,public=build(production=production)
     print(json.dumps({'html_routes':len(routes),'static_files':len(public),'production_approved':production,'drafts_included':False}))
