@@ -6,15 +6,17 @@
 
 - 基準main: `7d4230309d7d38860cff2c21a5a7e9dd99a8b14d`。再開時にリモートmainも同SHAと確認。
 - ローカルブランチ: `codex/cloudflare-pages-validation`。既存の追跡済みサイトファイルは変更せず、追加ファイルのみ。
-- 再開時のCloudflare一覧にはプロジェクトなし。Cloudflareログイン済み、GitHub連携ログイン待ち。
+- 代表からGitHub連携完了（対象リポジトリ1件のみ）と、Pages設定画面のプロジェクト名 `revia-website-validation`・検証ブランチ選択済み・未デプロイの報告あり。Cloudflare操作は代表が行う。
 - 元15テスト、5点の拒否テスト、追加境界・暗号化・Pages出力検査を含めてローカル検証する。実環境での成功はローカル成功と区別する。
 
 ## Pagesの準備値（未適用）
 
-Git連携のPagesプロジェクトを作成し、対象リポジトリだけを許可する。初回は検証用ブランチを選ぶ。プロジェクトのpages.dev URLは公開検証用であり、独自ドメインは追加しない。Direct UploadプロジェクトはGit連携へ切替できないため代替として勝手に作らない。
+Git連携のPagesプロジェクトを作成し、対象リポジトリだけを許可する。初回は `codex/cloudflare-pages-validation` を選ぶ。プロジェクトのpages.dev URLは公開検証用であり、独自ドメインは追加しない。Direct UploadプロジェクトはGit連携へ切替できないため代替として勝手に作らない。
 
 | 設定 | 値 |
 |---|---|
+| Project name | `revia-website-validation` |
+| Production branch（検証プロジェクト内の設定名） | `codex/cloudflare-pages-validation` |
 | Framework | None |
 | Build command | `python3 -m unittest discover -s tests -v && python3 scripts/build_pages.py` |
 | Output directory | `dist` |
@@ -24,13 +26,13 @@ Git連携のPagesプロジェクトを作成し、対象リポジトリだけを
 | Secret/有料bindings | 検証環境では不要 |
 | Production approval flag | 未設定 |
 
-`REVIA_PAGES_PRODUCTION_APPROVED=true`と`CF_PAGES_BRANCH=main`がそろう場合のみ本番向け出力になる。今回はどちらも有効にしない。HTMLには手を加えず、プレビュー側のCSPでGA4、外部通信、フォーム遷移、YouTube iframeを遮断する。JS出力のGAS URLを同一オリジンの模擬APIへ差替える。本番向けJSは原本と同一。YouTubeと本番GA4/GASの実動作はこのプレビューだけでは確認できない。
+`REVIA_PAGES_PRODUCTION_APPROVED=true`と`CF_PAGES_BRANCH=main`がそろう場合のみ本番向け出力になる。今回はどちらも有効にしない。検証用の全ホストに対しHTMLはWorker、静的ファイルは`_headers`で`X-Robots-Tag: noindex, nofollow, noarchive`を付ける。robots.txtは全クロール拒否。noindexはアクセス制限ではないため、非公開物の保護はdistへの非出力で行う。HTMLには手を加えず、プレビュー側のCSPでGA4、外部通信、フォーム遷移、YouTube iframeを遮断する。JS出力のGAS URLを同一オリジンの模擬APIへ差替える。本番向けJSは原本と同一。YouTubeと本番GA4/GASの実動作はこのプレビューだけでは確認できない。
 
 ## URL・公開ファイルの保全
 
 Pagesの標準HTML配信は`.html`を省略形へ転送するため、Advanced modeの`_worker.js`で既存URLを保持する。HTMLを内部`.bin`資産へ格納し、元URLから元バイト列をtext/htmlで返す。内部資産URLの直接アクセスは404。`/column`だけは`/column/`へ308。不存在URLは404で、SPAの200応答を防ぐ。
 
-`config/pages-public.json`が既存HTML16ページ・静的47ファイルの許可リスト。公開後の台帳に記録された記事・画像だけを追加する。未承認ファイル、未来の台帳、改変された公開ファイル・画像、出力対象外への内部リンクは停止する。`tmp/`、バックアップHTML、scripts、tests、docs、暗号化原稿、Git情報を出力しない。新しい一般ページ/共通資産を追加する際はこの許可リストのレビューも必要。
+`config/pages-public.json`が既存HTML16ページ・静的47ファイルの許可リスト。公開後の台帳に記録された記事・画像だけを追加する。未承認ファイル、未来の台帳、改変された公開ファイル・画像、出力対象外への内部リンクは停止する。`google-apps-script/`、`tmp/`、バックアップHTML、scripts、tests、docs、暗号化原稿、Git情報を出力しない。これらのパス・隠しファイル・GASの`.gs`等は許可リストへの誤追加も拒否する。新しい一般ページ/共通資産を追加する際はこの許可リストのレビューも必要。
 
 ## 合成データによる検証
 
@@ -91,7 +93,7 @@ HTMLのURL維持にFunctionsを使うためHTMLアクセスはWorkers Freeと共
 
 ## 10月20日までの優先残作業
 
-1. **P0** GitHubログイン、Cloudflareアプリ権限を対象リポジトリに限定して代表が承認。検証用ブランチをGitHubへ登録。
+1. **完了（代表報告/前ターン確認）** GitHubログイン、対象リポジトリ限定のCloudflareアプリ承認、GitHub検証用ブランチ作成。
 2. **P0** Pages FreeのGit連携プロジェクトを構築し、同コミットの検証URLでHTTP・スマホ・診断・模擬予約を再検証。URLとSHAを記録。
 3. **P0** GitHub Actions→Pages更新と失敗時Retryを合成データで確認。GA4の受信、本番GAS予約/メール/カレンダーの確認方法を代表と確定し、独立したテスト環境か承認されたテストで実証する。
 4. **P0** 代表承認の完成原稿・画像を私有経路で受領し、最終HTML/ハッシュの承認と登録を確認。内容の創作で埋めない。

@@ -34,11 +34,12 @@ def verify(origin,root):
     for path in manifest['existing_static']:
         status,headers,body=request('/'+path)
         assert status==200,path
+        assert 'noindex' in headers.get('X-Robots-Tag',''),path
         if path in ('script.js','contact.js'):assert b'https://script.google.com/macros/' not in body,path
         elif path=='robots.txt':assert b'Disallow: /' in body
         else:assert body==(root/path).read_bytes(),path
         checks.append({'path':'/'+path,'status':status})
-    for path in ('/missing','/scripts/column_release.py','/config/pages-public.json','/.git/config','/column/future.html','/__pages_html/404.bin','/scheduled/2026-10-20.enc.json'):
+    for path in ('/missing','/scripts/column_release.py','/config/pages-public.json','/.git/config','/column/future.html','/__pages_html/404.bin','/scheduled/2026-10-20.enc.json','/google-apps-script/Code.gs','/tmp/backup.html','/docs/cloudflare-pages-validation.md'):
         assert request(path)[0]==404,path
         checks.append({'path':path,'status':404})
     for path in ('/','/column/'):

@@ -28,13 +28,32 @@ class PagesTests(unittest.TestCase):
         self.assertEqual(routes['/column/'],routes['/column/index.html'])
 
     def test_drafts_backup_sources_and_future_images_excluded(self):
-        for name in ('column/future.html','images/column-2026-10-future.png','secret.js','scheduled/2026-10-20.enc.json'):
+        for name in ('column/future.html','images/column-2026-10-future.png','secret.js','scheduled/2026-10-20.enc.json','google-apps-script/canary.gs','tmp/private.txt','drafts/canary.html'):
             p=self.root/name;p.parent.mkdir(exist_ok=True);p.write_text('PRIVATE_CANARY')
         routes,public=b.build(self.root)
         self.assertFalse(any('future' in path or 'secret' in path for path in [*routes,*public]))
         for p in (self.root/'dist').rglob('*'):
             if p.is_file():self.assertNotIn(b'PRIVATE_CANARY',p.read_bytes())
         self.assertFalse((self.root/'dist/scripts').exists())
+        for directory in ('google-apps-script','tmp','drafts','scheduled','docs','tests','config','publication','revia-site-vercel-drop-20260704'):
+            self.assertFalse((self.root/'dist'/directory).exists(),directory)
+
+    def test_nonpublic_paths_cannot_be_added_to_manifest(self):
+        p=self.root/'config/pages-public.json';original=json.loads(p.read_text())
+        for path in ('google-apps-script/source.js','tmp/backup.html','scheduled/draft.html','.env','private.gs'):
+            manifest=json.loads(json.dumps(original));manifest['existing_static'].append(path)
+            p.write_text(json.dumps(manifest))
+            with self.assertRaisesRegex(ReleaseError,'NONPUBLIC_FILE_IN_MANIFEST'):b.build(self.root)
+
+    def test_preview_static_and_html_responses_have_noindex(self):
+        b.build(self.root)
+        headers=(self.root/'dist/_headers').read_text()
+        self.assertTrue(headers.startswith('/*\n'))
+        self.assertIn('X-Robots-Tag: noindex, nofollow, noarchive',headers)
+        worker=(self.root/'dist/_worker.js').read_text()
+        self.assertIn("headers['X-Robots-Tag'] = 'noindex, nofollow, noarchive'",worker)
+        b.build(self.root,production=True)
+        self.assertNotIn('X-Robots-Tag',(self.root/'dist/_headers').read_text())
 
     def test_preview_endpoints_are_mocked(self):
         original=(self.root/'script.js').read_bytes()

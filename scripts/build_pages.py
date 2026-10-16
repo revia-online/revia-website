@@ -28,6 +28,10 @@ def build(root=ROOT, output=None, production=False):
     html_paths = manifest['root_html'] + ['column/index.html'] + articles
     for path in html_paths + static:
         require(not Path(path).is_absolute() and '..' not in Path(path).parts and (root/path).resolve().is_relative_to(root.resolve()), 'INVALID_PUBLIC_PATH')
+        parts=Path(path).parts
+        require(not any(part.startswith('.') for part in parts), 'NONPUBLIC_FILE_IN_MANIFEST')
+        require(parts[0] not in ('google-apps-script','tmp','work','scripts','tests','docs','config','cloudflare','publication','scheduled','drafts','node_modules','revia-site-vercel-drop-20260704'), 'NONPUBLIC_FILE_IN_MANIFEST')
+        require(Path(path).suffix.lower() in ('.html','.css','.js','.png','.jpg','.jpeg','.webp','.svg','.webmanifest','.xml','.txt'), 'NONPUBLIC_FILE_IN_MANIFEST')
     require(all((root/p).is_file() for p in html_paths), 'PUBLIC_FILE_MISSING')
     if output.exists(): shutil.rmtree(output)
     (output/'__pages_html').mkdir(parents=True)
@@ -63,7 +67,12 @@ def build(root=ROOT, output=None, production=False):
     worker=worker.replace('__ROUTES__',json.dumps(routes)).replace('__PUBLIC_FILES__',json.dumps(sorted(set(public)))).replace('__PRODUCTION_APPROVED__','true' if production else 'false')
     (output/'_worker.js').write_text(worker)
     (output/'_routes.json').write_text(json.dumps({'version':1,'include':['/*'],'exclude':['/images/*','/assets/*','/vendor/*','/*.css','/*.js','/*.png','/*.webmanifest']}))
-    (output/'_headers').write_text('/*\n  X-Content-Type-Options: nosniff\n\nhttps://:project.pages.dev/*\n  X-Robots-Tag: noindex, nofollow, noarchive\n')
+    # Functions responses set their own headers; this also covers static assets
+    # and Pages-native error responses on every validation/branch hostname.
+    headers='/*\n  X-Content-Type-Options: nosniff\n'
+    if not production:
+        headers+='  X-Robots-Tag: noindex, nofollow, noarchive\n'
+    (output/'_headers').write_text(headers)
     return routes,public
 
 
