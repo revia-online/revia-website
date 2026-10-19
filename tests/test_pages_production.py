@@ -161,6 +161,24 @@ class ProductionTests(unittest.TestCase):
             self.assertEqual(len(checks), 96)
             self.assertTrue(all(method in ('GET', 'HEAD') for _, method in visited))
             self.assertTrue(all('script.google.com' not in url for url, _ in visited))
+            # A real production build must not reveal HTML, GAS-connected JS or images
+            # on its pages.dev or branch-specific preview hostnames.
+            for host in ('revia-website-production.pages.dev',
+                         'canary.revia-website-production.pages.dev'):
+                for path in ('/', '/index.html', '/diagnosis.html', '/script.js',
+                             '/contact.js', '/styles.css',
+                             '/assets/hero-online-tutoring.png', '/robots.txt'):
+                    with self.subTest(nonofficial_host=host, path=path):
+                        request = urllib.request.Request('https://' + host + path)
+                        try:
+                            response = transport.open(request, 20)
+                        except urllib.error.HTTPError as error:
+                            response = error
+                        with response:
+                            self.assertEqual(response.status, 404)
+                            self.assertIn('noindex', response.headers['X-Robots-Tag'])
+                            self.assertEqual(response.headers['Cache-Control'], 'no-store')
+                            self.assertNotIn(b'script.google.com', response.read())
             print('PRODUCTION_LOCAL_HTTP_VERIFIED checks=' + str(len(checks)))
             with patch.object(preview.urllib.request, 'build_opener', return_value=transport):
                 preview_checks = preview.verify('https://validation.pages.dev', preview_root)

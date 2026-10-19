@@ -106,13 +106,13 @@ def verify_artifacts(root, output):
     require(worker == render_worker(root, routes, ['/' + p for p in static], True),
             'PRODUCTION_WORKER_CHANGED')
     require('const PRODUCTION_APPROVED = true;' in worker and
-            "const preview = !PRODUCTION_APPROVED || url.hostname !== 'www.revia.website';" in worker,
+            "const preview = !PRODUCTION_APPROVED || url.hostname !== 'www.revia.website';" in worker and
+            "if (PRODUCTION_APPROVED && url.hostname !== 'www.revia.website')" in worker,
             'PRODUCTION_WORKER_MODE_INVALID')
     require((output/'_headers').read_text() == '/*\n  X-Content-Type-Options: nosniff\n',
             'PRODUCTION_HEADERS_CHANGED')
     routing = json.loads((output/'_routes.json').read_text())
-    require(routing == {'version': 1, 'include': ['/*'],
-                       'exclude': ['/images/*','/assets/*','/vendor/*','/*.css','/*.js','/*.png','/*.webmanifest']},
+    require(routing == {'version': 1, 'include': ['/*'], 'exclude': []},
             'PRODUCTION_ROUTES_CHANGED')
     files = list(output.rglob('*'))
     require(not any(p.is_symlink() for p in files), 'PRODUCTION_SYMLINK')

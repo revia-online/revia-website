@@ -108,7 +108,10 @@ def build(root=ROOT, output=None, production=False):
         p.write_text(preview_js[:match.start()] + safe_handler + preview_js[match.end():])
     worker=render_worker(root, routes, public, production)
     (output/'_worker.js').write_text(worker)
-    (output/'_routes.json').write_text(json.dumps({'version':1,'include':['/*'],'exclude':['/images/*','/assets/*','/vendor/*','/*.css','/*.js','/*.png','/*.webmanifest']}))
+    # Production: every URL must pass through the hostname guard, including static files.
+    # Validation: preserve existing static exclusions and their noindex _headers handling.
+    excluded = [] if production else ['/images/*','/assets/*','/vendor/*','/*.css','/*.js','/*.png','/*.webmanifest']
+    (output/'_routes.json').write_text(json.dumps({'version':1,'include':['/*'],'exclude':excluded}))
     # Functions responses set their own headers; this also covers static assets
     # and Pages-native error responses on every validation/branch hostname.
     headers='/*\n  X-Content-Type-Options: nosniff\n'

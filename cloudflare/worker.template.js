@@ -8,6 +8,16 @@ export default {
     const url = new URL(request.url);
     const preview = !PRODUCTION_APPROVED || url.hostname !== 'www.revia.website';
     const headers = { 'X-Content-Type-Options': 'nosniff' };
+    // Production assets (including CSS/JS/images) are visible only on the official host.
+    // This guard must execute before mocks, route mapping, and env.ASSETS.fetch().
+    if (PRODUCTION_APPROVED && url.hostname !== 'www.revia.website') {
+      return new Response('Not found', {status:404, headers:{
+        'Content-Type':'text/plain; charset=utf-8',
+        'X-Content-Type-Options':'nosniff',
+        'X-Robots-Tag':'noindex, nofollow, noarchive',
+        'Cache-Control':'no-store'
+      }});
+    }
     if (preview) {
       headers['X-Robots-Tag'] = 'noindex, nofollow, noarchive';
       headers['Content-Security-Policy'] = CSP;

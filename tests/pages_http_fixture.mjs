@@ -31,7 +31,9 @@ for (const directory of [productionDir, previewDir]) {
 const server = createServer(async (incoming, outgoing) => {
   try {
     const url = new URL(incoming.headers['x-revia-fixture-url'] || 'http://invalid/');
-    if (!['www.revia.website','revia.website','validation.pages.dev'].includes(url.hostname)) throw Error('Unknown fixture host');
+    if (!['www.revia.website','revia.website','validation.pages.dev',
+           'revia-website-production.pages.dev',
+           'canary.revia-website-production.pages.dev'].includes(url.hostname)) throw Error('Unknown fixture host');
     const preview = url.hostname === 'validation.pages.dev';
     let response;
     if (!preview && (url.protocol === 'http:' || url.hostname === 'revia.website')) {
