@@ -14,16 +14,18 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 PREVIEW_SUCCESS = "模擬予約テストが完了しました。実際の予約は確定していません。"
-PREVIEW_NO_MAIL = "メールは送信していません。Zoom参加URLも発行していません。"
+PREVIEW_NO_MAIL = "メールは送信していません。Google Meet参加URLも発行していません。"
 
 
 def preview_html(data):
     text = data.decode('utf-8')
     text = text.replace('<div class="booking-complete" id="bookingComplete" hidden>',
-        '<p role="note">検証環境：実際の予約・メール送信・Zoom発行は行いません。入力にはテストデータを使用してください。</p>\n'
+        '<p role="note">検証環境：実際の予約・メール送信・Google Meet URL発行は行いません。入力にはテストデータを使用してください。</p>\n'
         '<div class="booking-complete" id="bookingComplete" hidden>')
     text = text.replace('無料相談のご予約が確定しました。', PREVIEW_SUCCESS)
-    text = text.replace('Zoom参加URLを、ご登録のメールアドレスへお送りしました。', PREVIEW_NO_MAIL)
+    notice = '<p id="bookingCompleteNotice">参加URLは確認メールをご確認ください。届かない場合はREVIAにお問い合わせください。</p>'
+    require(text.count(notice) == 1, 'PREVIEW_HTML_NOTICE_MISSING')
+    text = text.replace(notice, '<p id="bookingCompleteNotice">' + PREVIEW_NO_MAIL + '</p>')
     return text.encode('utf-8')
 
 
@@ -92,8 +94,18 @@ def build(root=ROOT, output=None, production=False):
             p.write_text(re.sub(r'https://script\.google\.com/macros/s/[^"\s]+/exec',
                                'https://PLACEHOLDER.invalid/__qa/booking',p.read_text()).replace('"https://PLACEHOLDER.invalid/__qa/booking"','window.location.origin + "/__qa/booking"'))
         p=output/'script.js'
-        p.write_text(p.read_text().replace('無料相談のご予約が確定しました。', PREVIEW_SUCCESS)
-                     .replace('Zoom参加URLを、ご登録のメールアドレスへお送りしました。', PREVIEW_NO_MAIL))
+        # Change only the generated preview JS, never the repository's original JS.
+        # Fail closed: regardless of the response payload, a preview cannot claim
+        # that a real appointment, confirmation email or Meet URL exists.
+        preview_js = p.read_text()
+        handler = r'const getBookingSuccessMessage = \(result\) => \{.*?^\};'
+        matches = list(re.finditer(handler, preview_js, flags=re.MULTILINE | re.DOTALL))
+        require(len(matches) == 1, 'MEET_SUCCESS_HANDLER_MISSING')
+        safe_handler = ('const getBookingSuccessMessage = (_result) => {\n  return '
+                        + json.dumps(PREVIEW_SUCCESS + '\n' + PREVIEW_NO_MAIL, ensure_ascii=False)
+                        + ';\n};')
+        match = matches[0]
+        p.write_text(preview_js[:match.start()] + safe_handler + preview_js[match.end():])
     worker=render_worker(root, routes, public, production)
     (output/'_worker.js').write_text(worker)
     (output/'_routes.json').write_text(json.dumps({'version':1,'include':['/*'],'exclude':['/images/*','/assets/*','/vendor/*','/*.css','/*.js','/*.png','/*.webmanifest']}))

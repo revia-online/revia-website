@@ -13,7 +13,7 @@ const kanaTargetInputs = document.querySelectorAll("[data-kana-target]");
 // 初心者向けメモ:
 // 開業後によく変更する値は、まずこの REVIA_SETTINGS だけを確認してください。
 // 予約URLは Google Apps Script を公開したあと、そのウェブアプリURLを bookingEndpoint に貼り付けます。
-// Zoom認証情報はブラウザ側に置かず、Google Apps Scriptのスクリプトプロパティで管理します。
+// 参加URLはGASで発行し、旧Zoom予約と新しいGoogle Meet予約の両方を表示します。
 const REVIA_SETTINGS = {
   reservationStorageKey: "reviaReservations",
   bookingEndpoint: "https://script.google.com/macros/s/AKfycby0G_eo1o7f5l4cmGCyv6laCeDaGOu0ASA9NizlDZTHXnDt0Fqk3Sdg9YuykynQ2kCM/exec",
@@ -28,7 +28,15 @@ const REVIA_SETTINGS = {
   },
 };
 
-const FORM_SUCCESS_MESSAGE = "無料相談のご予約が確定しました。\nZoom参加URLを、ご登録のメールアドレスへお送りしました。";
+const getBookingSuccessMessage = (result) => {
+  if (result.notificationStatus === "needs_review") {
+    return "ご予約は確定しました。確認メールの送信状況は運営で確認します。メールが届かない場合はinfo@revia.websiteへご連絡ください。";
+  }
+  if (result.notificationStatus === "sent") {
+    return "無料相談のご予約が確定しました。\n参加URLを、ご登録のメールアドレスへお送りしました。";
+  }
+  return "無料相談のご予約が確定しました。参加URLは確認メールをご確認ください。届かない場合はinfo@revia.websiteへご連絡ください。";
+};
 const FORM_FAILURE_MESSAGE = "送信に失敗しました。時間をおいて再度お試しください。";
 const SLOT_UNAVAILABLE_MESSAGE = "申し訳ありません。この時間は直前に予約が入りました。別の日時を選択してください。";
 const HIRAGANA_PATTERN = /^[ぁ-ゖーゝゞ\s　]+$/;
@@ -36,7 +44,26 @@ const kanaAssistInstances = [];
 let availabilitySlots = [];
 let availabilityDates = [];
 let availabilityLoadFailed = false;
+let availabilityPaused = false;
+let availabilityPauseMessage = "";
 
+// Keep only a booking ID locally. Never create another ID after an ambiguous response.
+const BOOKING_HOLD_KEY = "reviaBookingSubmissionHold";
+const readBookingHold = () => {
+  try {
+    return JSON.parse(localStorage.getItem(BOOKING_HOLD_KEY) || "null");
+  } catch (_error) {
+    return { id: "不明" }; // Fail closed until the operator checks.
+  }
+};
+const getBookingHoldMessage = () => {
+  const hold = readBookingHold();
+  return hold ? `前回の予約結果を確認できていません。重複防止のため再送を停止しています。予約ID：${hold.id || "不明"}。info@revia.websiteへお問い合わせください。` : "";
+};
+const saveBookingHold = (reservation) => {
+  localStorage.setItem(BOOKING_HOLD_KEY, JSON.stringify({ id: reservation.id, createdAt: reservation.createdAt }));
+};
+const clearBookingHold = () => localStorage.removeItem(BOOKING_HOLD_KEY);
 const readReservations = () => JSON.parse(localStorage.getItem(REVIA_SETTINGS.reservationStorageKey) || "[]");
 const saveReservations = (reservations) => {
   localStorage.setItem(REVIA_SETTINGS.reservationStorageKey, JSON.stringify(reservations));
@@ -265,13 +292,17 @@ const renderSlotPicker = () => {
     slotSelect.value = currentSlot;
   }
 
-  const shouldDisableAll = availabilityLoadFailed || !hasSlots;
+  const shouldDisableAll = availabilityLoadFailed || availabilityPaused || !hasSlots || Boolean(readBookingHold());
   dateSelect.disabled = shouldDisableAll;
   slotSelect.disabled = shouldDisableAll || !selectedDate || daySlots.length === 0;
 
   bookingForm?.querySelector('button[type="submit"]')?.toggleAttribute("disabled", shouldDisableAll);
 
-  if (!hasSlots && !availabilityLoadFailed) {
+  if (readBookingHold()) {
+    setAvailabilityStatus(getBookingHoldMessage(), true);
+  } else if (availabilityPaused) {
+    setAvailabilityStatus(availabilityPauseMessage || "システム切替のため予約受付を一時停止しています。info@revia.websiteへお問い合わせください。", true);
+  } else if (!hasSlots && !availabilityLoadFailed) {
     setAvailabilityStatus("現在選べる日時がありません。お手数ですが、メールまたは無料相談フォームからお問い合わせください。", true);
   } else if (hasSlots) {
     setAvailabilityStatus("空いている日時だけを表示しています。日付を選ぶと、その日の時間を選べます。");
@@ -294,14 +325,18 @@ const loadAvailability = async () => {
       throw new Error(payload.message || "空き時間を取得できませんでした。");
     }
 
-    availabilitySlots = payload.slots || [];
-    availabilityDates = payload.dates || [];
+    availabilityPaused = payload.paused === true;
+    availabilityPauseMessage = availabilityPaused ? String(payload.message || "") : "";
+    availabilitySlots = availabilityPaused ? [] : (payload.slots || []);
+    availabilityDates = availabilityPaused ? [] : (payload.dates || []);
     availabilityLoadFailed = false;
     renderSlotPicker();
   } catch (error) {
     console.error(error);
     availabilitySlots = [];
     availabilityDates = [];
+    availabilityPaused = false;
+    availabilityPauseMessage = "";
     availabilityLoadFailed = true;
     setAvailabilityStatus("空き時間を取得できませんでした。時間をおいて再度お試しください。", true);
     renderSlotPicker();
@@ -317,9 +352,31 @@ const slotIdToGoogleDate = (slotId, extraMinutes = 0) => {
   return `${date}T${hour}${minute}00`;
 };
 
+// Only allow trusted HTTPS meeting URLs from locally stored records.
+const getMeetingLink = (reservation) => {
+  const candidates = [
+    { url: reservation.meetJoinUrl, label: "Google Meet", host: "meet.google.com" },
+    { url: reservation.zoomJoinUrl, label: "Zoom", host: "zoom.us" },
+  ];
+  for (const item of candidates) {
+    if (typeof item.url !== "string" || !item.url) continue;
+    try {
+      const url = new URL(item.url);
+      const hostname = url.hostname.toLowerCase();
+      if (url.protocol !== "https:") continue;
+      if (item.host === "meet.google.com" && hostname === item.host) return { url: url.href, label: item.label };
+      if (item.host === "zoom.us" && (hostname === "zoom.us" || hostname.endsWith(".zoom.us"))) return { url: url.href, label: item.label };
+    } catch (_error) {
+      // Do not render malformed URLs.
+    }
+  }
+  return null;
+};
+
 const buildCalendarUrl = (reservation) => {
   const firstSlot = reservation.confirmedSlotId || reservation.slotId || reservation.preferenceIds?.[0];
   const dates = `${slotIdToGoogleDate(firstSlot)}/${slotIdToGoogleDate(firstSlot, REVIA_SETTINGS.meetingMinutes)}`;
+  const meeting = getMeetingLink(reservation);
   const details = [
     `保護者氏名: ${reservation.guardian}`,
     `保護者氏名（ふりがな）: ${reservation.guardianKana || "未入力"}`,
@@ -329,7 +386,7 @@ const buildCalendarUrl = (reservation) => {
     `希望科目: ${reservation.subject}`,
     `相談内容: ${reservation.memo || "未入力"}`,
     `確定日時: ${reservation.confirmedSlotLabel || reservation.slotLabel || reservation.preferenceLabels?.[0] || "-"}`,
-    `Zoom参加URL: ${reservation.zoomJoinUrl || "確認メールをご確認ください"}`,
+    meeting ? `${meeting.label}参加URL: ${meeting.url}` : "参加URL: 確認メールをご確認ください",
     "持ち物: 成績表があればご準備ください",
     `面談時間: ${REVIA_SETTINGS.meetingMinutes}分程度`,
   ].join("\n");
@@ -345,6 +402,7 @@ const buildCalendarUrl = (reservation) => {
 };
 
 const buildMailUrl = (reservation) => {
+  const meeting = getMeetingLink(reservation);
   const body = [
     `${reservation.guardian}様`,
     "",
@@ -352,7 +410,7 @@ const buildMailUrl = (reservation) => {
     "",
     "以下の日時でご予約を承りました。",
     `面談日時：${reservation.confirmedSlotLabel || reservation.slotLabel || "-"}`,
-    `Zoom参加URL：${reservation.zoomJoinUrl || "確認メールをご確認ください"}`,
+    meeting ? `${meeting.label}参加URL：${meeting.url}` : "参加URL：確認メールをご確認ください",
     "",
     "開始時刻になりましたら、上記URLからご参加ください。",
     "待機室でお待ちいただく場合があります。",
@@ -418,8 +476,9 @@ const renderReservations = () => {
   reservationList.innerHTML = reservations
     .map(
       (reservation) => {
-        const zoomLink = reservation.zoomJoinUrl
-          ? `<a href="${escapeHtml(reservation.zoomJoinUrl)}" target="_blank" rel="noopener">Zoomに参加</a>`
+        const meeting = getMeetingLink(reservation);
+        const meetingLink = meeting
+          ? `<a href="${escapeHtml(meeting.url)}" target="_blank" rel="noopener noreferrer">${meeting.label}に参加</a>`
           : "";
 
         return `
@@ -429,7 +488,7 @@ const renderReservations = () => {
           <span>${escapeHtml(reservation.grade)} / ${escapeHtml(reservation.subject)} / ${escapeHtml(reservation.email)}</span>
           <div class="reservation-tools">
             <a href="${buildCalendarUrl(reservation)}" target="_blank" rel="noopener">Googleカレンダーに追加</a>
-            ${zoomLink}
+            ${meetingLink}
             <a href="${buildMailUrl(reservation)}">確認メールを作成</a>
           </div>
         </article>
@@ -441,6 +500,11 @@ const renderReservations = () => {
 
 bookingForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
+  if (readBookingHold()) {
+    bookingMessage.textContent = getBookingHoldMessage();
+    setBookingControlsDisabled(true);
+    return;
+  }
 
   if (availabilityLoadFailed || availabilitySlots.length === 0) {
     bookingMessage.textContent = "空き時間を取得できていません。時間をおいて再度お試しください。";
@@ -484,11 +548,18 @@ bookingForm?.addEventListener("submit", async (event) => {
 
   let result;
 
+  // Save the ID before dispatch so even a lost response cannot silently create another ID.
+  saveBookingHold(reservation);
   try {
     result = await sendReservation(reservation);
   } catch (error) {
-    console.error(error);
-    bookingMessage.textContent = error.code === "slot_unavailable" ? SLOT_UNAVAILABLE_MESSAGE : error.message || FORM_FAILURE_MESSAGE;
+    console.error("booking_submission_failed", error.code || "unknown");
+    // These errors are returned before a new booking intent is persisted by the Meet GAS.
+    const definitelyNotBooked = ["slot_unavailable", "booking_paused", "invalid_request", "not_ready"];
+    if (definitelyNotBooked.includes(error.code)) clearBookingHold();
+    bookingMessage.textContent = readBookingHold()
+      ? getBookingHoldMessage()
+      : error.code === "slot_unavailable" ? SLOT_UNAVAILABLE_MESSAGE : error.message || FORM_FAILURE_MESSAGE;
     submitButton.disabled = false;
     await loadAvailability();
     return;
@@ -500,11 +571,16 @@ bookingForm?.addEventListener("submit", async (event) => {
     confirmedSlotLabel: result.confirmedSlotLabel || reservation.slotLabel,
     meetingStartIso: result.meetingStartIso || selectedSlot.startIso,
     meetingEndIso: result.meetingEndIso || selectedSlot.endIso,
+    meetJoinUrl: result.meetJoinUrl || "",
     zoomJoinUrl: result.zoomJoinUrl || "",
   };
 
   saveReservations([confirmedReservation, ...reservations]);
-  bookingMessage.textContent = FORM_SUCCESS_MESSAGE;
+  clearBookingHold();
+  const successMessage = getBookingSuccessMessage(result);
+  bookingMessage.textContent = successMessage;
+  const completeNotice = document.querySelector("#bookingCompleteNotice");
+  if (completeNotice) completeNotice.textContent = successMessage;
   if (bookingCompleteTime) {
     bookingCompleteTime.textContent = `面談日時：${confirmedReservation.confirmedSlotLabel}`;
   }
@@ -527,7 +603,7 @@ dateSelect?.addEventListener("change", () => {
 
 clearReservationsButton?.addEventListener("click", () => {
   saveReservations([]);
-  bookingMessage.textContent = "予約一覧をクリアしました。";
+  bookingMessage.textContent = readBookingHold() ? getBookingHoldMessage() : "予約一覧をクリアしました。";
   resetKanaAssistState();
   bookingForm.hidden = false;
   bookingComplete.hidden = true;
@@ -550,5 +626,6 @@ document.addEventListener("click", (event) => {
 
 renderPricing();
 setupKanaAssist();
+if (readBookingHold() && bookingMessage) bookingMessage.textContent = getBookingHoldMessage();
 loadAvailability();
 renderReservations();
