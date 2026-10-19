@@ -35,9 +35,14 @@ def production_mode(env):
     approval = env.get('REVIA_PAGES_PRODUCTION_APPROVED', '')
     branch = env.get('CF_PAGES_BRANCH', '')
     url = env.get('CF_PAGES_URL', '')
+    # Separate, opt-in migration gate. Never make the original preview project a
+    # production target merely by setting the ordinary production flag.
+    repurpose = env.get('REVIA_PAGES_VALIDATION_REPURPOSE_APPROVED', '')
     require(mode in ('', 'validation', 'production'), 'INVALID_PAGES_MODE')
     require(approval in ('', 'false', 'true'), 'INVALID_PRODUCTION_APPROVAL')
+    require(repurpose in ('', 'false', 'true'), 'INVALID_VALIDATION_REPURPOSE_APPROVAL')
     if mode != 'production':
+        require(repurpose != 'true', 'VALIDATION_REPURPOSE_REQUIRES_PRODUCTION')
         require(approval != 'true' and branch != 'main', 'PRODUCTION_MODE_REQUIRED')
         require(not url or project_host(url, VALIDATION_PROJECT), 'UNKNOWN_PAGES_PROJECT')
         require(not env.get('CF_PAGES') or bool(url), 'PAGES_URL_REQUIRED')
@@ -45,8 +50,12 @@ def production_mode(env):
     require(approval == 'true', 'PRODUCTION_APPROVAL_REQUIRED')
     require(branch == 'main', 'PRODUCTION_MAIN_REQUIRED')
     project = env.get('REVIA_PAGES_PRODUCTION_PROJECT', '')
-    require(bool(re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', project))
-            and project != VALIDATION_PROJECT, 'PRODUCTION_PROJECT_REQUIRED')
+    require(bool(re.fullmatch(r'[a-z0-9]+(?:-[a-z0-9]+)*', project)),
+            'PRODUCTION_PROJECT_REQUIRED')
+    if project == VALIDATION_PROJECT:
+        require(repurpose == 'true', 'VALIDATION_REPURPOSE_APPROVAL_REQUIRED')
+    else:
+        require(repurpose != 'true', 'VALIDATION_REPURPOSE_PROJECT_MISMATCH')
     require(urlsplit(url).scheme == 'https' and project_host(url, project),
             'PRODUCTION_PROJECT_MISMATCH')
     return True
