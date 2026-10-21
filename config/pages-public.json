@@ -17,7 +17,8 @@
     "column/2026-09-challenging-people.html",
     "column/2026-09-second-semester-mock-exam.html",
     "column/2026-10-choosing-target-school.html",
-    "column/2026-10-national-public-university-admissions-2027.html"
+    "column/2026-10-national-public-university-admissions-2027.html",
+    "column/2026-10-osaka-public-high-school-admissions-2027.html"
   ],
   "existing_static": [
     "android-chrome-192x192.png",
@@ -67,6 +68,7 @@
     "test-study-diagnosis.js",
     "testimonials.js",
     "vendor/vanilla-autokana.js",
-    "images/column-2026-10-university-admissions-2027.png"
+    "images/column-2026-10-university-admissions-2027.png",
+    "images/column-2026-10-osaka-public-high-school-admissions-2027.jpg"
   ]
 }
