@@ -21,6 +21,7 @@
         "ありがとうございました。",
       ],
       year: "pre-opening",
+      publishedYear: 2026,
     },
     {
       id: "student-aichi-high-school-3",
@@ -39,6 +40,7 @@
         "大学の実験や授業は大変ですが、先生が話してくれた「なぜ勉強するのか」ということを思い出しながら、将来の目標に向かって頑張っていきたいです。",
       ],
       year: "pre-opening",
+      publishedYear: 2026,
     },
     {
       id: "student-okayama-junior-high-3",
@@ -57,6 +59,7 @@
         "今は学校生活もとても楽しいです。高校でもサッカーを頑張っています！",
       ],
       year: "pre-opening",
+      publishedYear: 2026,
     },
     {
       id: "student-tokyo-high-school-1",
@@ -78,6 +81,7 @@
         "これから大学受験が終わるまで、REVIAで頑張っていきたいと思っています。",
       ],
       year: "current",
+      publishedYear: 2026,
     },
   ];
 
@@ -186,6 +190,13 @@
     attribute.className = "testimonial-attribute";
     attribute.textContent = testimonial.attribute;
     profileDetails.append(attribute);
+
+    const publishedYear = document.createElement("small");
+    publishedYear.className = "testimonial-published-year";
+    publishedYear.style.fontSize = "0.8rem";
+    publishedYear.style.color = "var(--muted)";
+    publishedYear.textContent = `掲載年：${testimonial.publishedYear}年`;
+    profileDetails.append(publishedYear);
     profile.append(profileDetails);
 
     const content = document.createElement("div");
@@ -325,3 +336,4 @@
     console.error("体験談カルーセルを初期化できませんでした。", error);
   }
 })();
+
