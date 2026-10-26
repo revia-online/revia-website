@@ -19,7 +19,8 @@
     "column/2026-10-choosing-target-school.html",
     "column/2026-10-national-public-university-admissions-2027.html",
     "column/2026-10-osaka-public-high-school-admissions-2027.html",
-    "column/2026-10-tobitate-study-abroad-2027.html"
+    "column/2026-10-tobitate-study-abroad-2027.html",
+    "column/2026-10-high-school-scholarship-benefits.html"
   ],
   "existing_static": [
     "android-chrome-192x192.png",
@@ -72,6 +73,8 @@
     "images/column-2026-10-university-admissions-2027.png",
     "images/column-2026-10-osaka-public-high-school-admissions-2027.jpg",
     "images/column-2026-10-tobitate-study-abroad-2027.jpg",
-    "images/column-2026-10-tobitate-study-abroad-2027-800.jpg"
+    "images/column-2026-10-tobitate-study-abroad-2027-800.jpg",
+    "images/column-2026-10-scholarship-benefits.jpg",
+    "images/column-2026-10-scholarship-benefits-400.jpg"
   ]
 }
