@@ -20,7 +20,8 @@
     "column/2026-10-national-public-university-admissions-2027.html",
     "column/2026-10-osaka-public-high-school-admissions-2027.html",
     "column/2026-10-tobitate-study-abroad-2027.html",
-    "column/2026-10-high-school-scholarship-benefits.html"
+    "column/2026-10-high-school-scholarship-benefits.html",
+    "column/2026-10-english-writing-simple-japanese.html"
   ],
   "existing_static": [
     "android-chrome-192x192.png",
@@ -75,6 +76,9 @@
     "images/column-2026-10-tobitate-study-abroad-2027.jpg",
     "images/column-2026-10-tobitate-study-abroad-2027-800.jpg",
     "images/column-2026-10-scholarship-benefits.jpg",
-    "images/column-2026-10-scholarship-benefits-400.jpg"
+    "images/column-2026-10-scholarship-benefits-400.jpg",
+    "images/column-2026-10-english-writing.jpg",
+    "images/column-2026-10-english-writing-800.jpg",
+    "images/column-2026-10-english-writing-400.jpg"
   ]
 }
