@@ -60,8 +60,8 @@ class ProductionTests(unittest.TestCase):
         build.build(self.root, production=True)
         output = self.root/'dist'
         result = production.verify_artifacts(self.root, output)
-        self.assertEqual(result['html_files'], 21)
-        self.assertEqual(result['static_files'], 56)
+        self.assertEqual(result['html_files'], 22)
+        self.assertEqual(result['static_files'], 58)
         for path, data in (
             ('_headers', b'/*\n  X-Robots-Tag: NoIndex\n'),
             ('_headers', b"/*\n  Content-Security-Policy: connect-src 'self'\n"),
@@ -158,7 +158,7 @@ class ProductionTests(unittest.TestCase):
 
             transport = LocalOpener()
             checks = production.verify_http(self.root, transport)
-            self.assertEqual(len(checks), 110)
+            self.assertEqual(len(checks), 113)
             self.assertTrue(all(method in ('GET', 'HEAD') for _, method in visited))
             self.assertTrue(all('script.google.com' not in url for url, _ in visited))
             # A real production build must not reveal HTML, GAS-connected JS or images
@@ -182,7 +182,7 @@ class ProductionTests(unittest.TestCase):
             print('PRODUCTION_LOCAL_HTTP_VERIFIED checks=' + str(len(checks)))
             with patch.object(preview.urllib.request, 'build_opener', return_value=transport):
                 preview_checks = preview.verify('https://validation.pages.dev', preview_root)
-            self.assertEqual(len(preview_checks), 89)
+            self.assertEqual(len(preview_checks), 92)
             for path in ('/index.html', '/robots.txt', '/__qa/booking', '/missing'):
                 request = urllib.request.Request('https://validation.pages.dev' + path)
                 try:
