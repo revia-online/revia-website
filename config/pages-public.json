@@ -22,7 +22,8 @@
     "column/2026-10-tobitate-study-abroad-2027.html",
     "column/2026-10-high-school-scholarship-benefits.html",
     "column/2026-10-english-writing-simple-japanese.html",
-    "column/2026-10-digital-textbooks-understand-and-do.html"
+    "column/2026-10-digital-textbooks-understand-and-do.html",
+    "column/2026-11-self-directed-learning-ai.html"
   ],
   "existing_static": [
     "android-chrome-192x192.png",
@@ -82,6 +83,9 @@
     "images/column-2026-10-english-writing-800.jpg",
     "images/column-2026-10-english-writing-400.jpg",
     "images/column-2026-10-digital-textbooks.jpg",
-    "images/column-2026-10-digital-textbooks-400.jpg"
+    "images/column-2026-10-digital-textbooks-400.jpg",
+    "images/column-2026-11-self-directed-learning-ai.jpg",
+    "images/column-2026-11-self-directed-learning-ai-400.jpg",
+    "images/column-2026-11-self-directed-learning-ai-800.jpg"
   ]
 }
