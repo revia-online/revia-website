@@ -1,0 +1,59 @@
+[
+  {
+    "date": "2026-11-04",
+    "publish_at": "2026-11-04T07:00:00+09:00",
+    "slug": "2026-11-geometry-auxiliary-lines",
+    "path": "column/2026-11-geometry-auxiliary-lines.html",
+    "assets": {
+      "images/column-2026-11-geometry-auxiliary-lines-400.jpg": "cbdd16e9d4372b026a2f4ab9cabf96531329f2cacd6cd278a4e425d666a18d60",
+      "images/column-2026-11-geometry-auxiliary-lines-800.jpg": "fcaf6f5cb6ccc1c84465422e124a058b9fdf7a2d24492688ce9fb7d0783dbb09",
+      "images/column-2026-11-geometry-auxiliary-lines.jpg": "2651b15d1cca4b0d0057d9feff56a833f08a30ea27d288684a7727ba763165ff"
+    },
+    "html_sha256": "9c1af407c2f714bdff4eed5ee7e783cd95fb98086c8d7fab67f5139e886969ec"
+  },
+  {
+    "date": "2026-11-05",
+    "publish_at": "2026-11-05T07:00:00+09:00",
+    "slug": "2026-11-common-test-ticket-travel-2027",
+    "path": "column/2026-11-common-test-ticket-travel-2027.html",
+    "assets": {
+      "images/column-2026-11-common-test-ticket-travel-2027.jpg": "f11f05d041726949602b54891748698292ff5cef165c05bdf624fb6bbb1a0c2b"
+    },
+    "html_sha256": "6f1bbf0bea4375f85946ba133c44a6fd3fd9597441efc7f5064e96a0c8d12dac"
+  },
+  {
+    "date": "2026-11-06",
+    "publish_at": "2026-11-06T07:00:00+09:00",
+    "slug": "2026-11-hyogo-high-school-grades-choice",
+    "path": "column/2026-11-hyogo-high-school-grades-choice.html",
+    "assets": {
+      "images/column-2026-11-hyogo-high-school-grades-choice-400.jpg": "520bdaa6a4372ca25d4373f22bc55c71d5c6a513ebf92a4407afd239ab1d7e81",
+      "images/column-2026-11-hyogo-high-school-grades-choice-800.jpg": "4b028125e678819d677c52cf5e901ba3e04e7f8d254b81572d4ba99168c664fd",
+      "images/column-2026-11-hyogo-high-school-grades-choice.jpg": "a51838b71f469f32a41d0cfc55f0a784655c0b59f7fad6b287c71de200ca66bd"
+    },
+    "html_sha256": "7fb301018c4152de42c703cdcde79f35c5700d4945bcec83b146e55e7456c60f"
+  },
+  {
+    "date": "2026-11-07",
+    "publish_at": "2026-11-07T07:00:00+09:00",
+    "slug": "2026-11-higashiosaka-learning-subsidy",
+    "path": "column/2026-11-higashiosaka-learning-subsidy.html",
+    "assets": {
+      "images/column-2026-11-higashiosaka-learning-subsidy-400.jpg": "8511728c952ae006cf17733ba9407c761ca6bbbcd8996b175612de41acd0a243",
+      "images/column-2026-11-higashiosaka-learning-subsidy.jpg": "75cb7ffd44b06e7d36d92d057d4f995ea69b3a1bdf127d2484982272813bfda6"
+    },
+    "html_sha256": "f375fd6cc4296a285e06644c597c699a8c258c4afa08570dbd19f1cbd29e2a24"
+  },
+  {
+    "date": "2026-11-08",
+    "publish_at": "2026-11-08T07:00:00+09:00",
+    "slug": "2026-11-university-recommendation-by-grade",
+    "path": "column/2026-11-university-recommendation-by-grade.html",
+    "assets": {
+      "images/column-2026-11-university-recommendation-by-grade-400.jpg": "8c89d0af81247c7472c8a65062711b7557a99ba3ce62b681ab009f40d58f6a1d",
+      "images/column-2026-11-university-recommendation-by-grade-800.jpg": "b5b3d2dca63e29a17fae790da08b97a27c32f0c7c2f2348c8f801195cfde4a05",
+      "images/column-2026-11-university-recommendation-by-grade.jpg": "476ba8b96ed2810230f5240d7f7ccdc74bf372125ba092eef87dc1594804ae6a"
+    },
+    "html_sha256": "a5e3c0f3cbe0b129fe6b373b1823cc5fe15b0cb00fb0f926dcc05a0b3871fcad"
+  }
+]

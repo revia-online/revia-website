@@ -39,6 +39,8 @@ def public_paths(root):
         for path, digest in record['assets_sha256'].items():
             require(hashlib.sha256((root/path).read_bytes()).hexdigest() == digest, 'PUBLISHED_ASSET_CHANGED')
             static.append(path)
+    from prepare_november_column import check_public_state
+    check_public_state(root, articles, static)
     html_paths = manifest['root_html'] + ['column/index.html'] + articles
     for path in html_paths + static:
         require(not Path(path).is_absolute() and '..' not in Path(path).parts and (root/path).resolve().is_relative_to(root.resolve()), 'INVALID_PUBLIC_PATH')

@@ -60,8 +60,9 @@ class ProductionTests(unittest.TestCase):
         build.build(self.root, production=True)
         output = self.root/'dist'
         result = production.verify_artifacts(self.root, output)
-        self.assertEqual(result['html_files'], 23)
-        self.assertEqual(result['static_files'], 61)
+        manifest = json.loads((self.root/'config/pages-public.json').read_text())
+        self.assertEqual(result['html_files'], len(manifest['root_html']) + 1 + len(manifest['existing_articles']))
+        self.assertEqual(result['static_files'], len(set(manifest['existing_static'])))
         for path, data in (
             ('_headers', b'/*\n  X-Robots-Tag: NoIndex\n'),
             ('_headers', b"/*\n  Content-Security-Policy: connect-src 'self'\n"),
@@ -158,7 +159,8 @@ class ProductionTests(unittest.TestCase):
 
             transport = LocalOpener()
             checks = production.verify_http(self.root, transport)
-            self.assertEqual(len(checks), 117)
+            html_paths, static_paths = build.public_paths(self.root)
+            self.assertEqual(len(checks), len(html_paths) + len(static_paths) + 33)
             self.assertTrue(all(method in ('GET', 'HEAD') for _, method in visited))
             self.assertTrue(all('script.google.com' not in url for url, _ in visited))
             # A real production build must not reveal HTML, GAS-connected JS or images
@@ -182,7 +184,7 @@ class ProductionTests(unittest.TestCase):
             print('PRODUCTION_LOCAL_HTTP_VERIFIED checks=' + str(len(checks)))
             with patch.object(preview.urllib.request, 'build_opener', return_value=transport):
                 preview_checks = preview.verify('https://validation.pages.dev', preview_root)
-            self.assertEqual(len(preview_checks), 96)
+            self.assertEqual(len(preview_checks), len(html_paths) + len(static_paths) + 12)
             for path in ('/index.html', '/robots.txt', '/__qa/booking', '/missing'):
                 request = urllib.request.Request('https://validation.pages.dev' + path)
                 try:

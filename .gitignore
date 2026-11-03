@@ -4,3 +4,6 @@ __pycache__/
 .wrangler/
 node_modules/
 vercel-public/
+
+# Approved future manuscripts/images remain local until their individual release.
+/drafts/
