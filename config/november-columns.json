@@ -47,13 +47,13 @@
   {
     "date": "2026-11-08",
     "publish_at": "2026-11-08T07:00:00+09:00",
-    "slug": "2026-11-university-recommendation-by-grade",
-    "path": "column/2026-11-university-recommendation-by-grade.html",
+    "slug": "2026-11-national-public-recommendation-2027",
+    "path": "column/2026-11-national-public-recommendation-2027.html",
     "assets": {
-      "images/column-2026-11-university-recommendation-by-grade-400.jpg": "8c89d0af81247c7472c8a65062711b7557a99ba3ce62b681ab009f40d58f6a1d",
-      "images/column-2026-11-university-recommendation-by-grade-800.jpg": "b5b3d2dca63e29a17fae790da08b97a27c32f0c7c2f2348c8f801195cfde4a05",
-      "images/column-2026-11-university-recommendation-by-grade.jpg": "476ba8b96ed2810230f5240d7f7ccdc74bf372125ba092eef87dc1594804ae6a"
+      "images/column-2026-11-national-public-recommendation-2027-400.jpg": "c8dd9b01a865fe95efb0e93375d3fcea4fe224ef0b306f93906029aa857ac437",
+      "images/column-2026-11-national-public-recommendation-2027-800.jpg": "0e8b703ecac5e526e55d461fdf49d40abf4eca69e7e75367901e0a11ee9869aa",
+      "images/column-2026-11-national-public-recommendation-2027.jpg": "f33bf1b267955a899551d6eef38b6602b77c1fd65f6511f0ab4254371a58dcdb"
     },
-    "html_sha256": "a5e3c0f3cbe0b129fe6b373b1823cc5fe15b0cb00fb0f926dcc05a0b3871fcad"
+    "html_sha256": "7d96dd265537ff2c3395f63c58a384cf20d7c0081a19eb9b313e894214c639db"
   }
 ]
