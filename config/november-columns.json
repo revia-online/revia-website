@@ -55,5 +55,17 @@
       "images/column-2026-11-national-public-recommendation-2027.jpg": "f33bf1b267955a899551d6eef38b6602b77c1fd65f6511f0ab4254371a58dcdb"
     },
     "html_sha256": "7d96dd265537ff2c3395f63c58a384cf20d7c0081a19eb9b313e894214c639db"
+  },
+  {
+    "date": "2026-11-10",
+    "publish_at": "2026-11-10T07:00:00+09:00",
+    "slug": "2026-11-university-choice-beyond-hensachi",
+    "path": "column/2026-11-university-choice-beyond-hensachi.html",
+    "assets": {
+      "images/column-2026-11-university-choice-beyond-hensachi.jpg": "6d7ecf7d124c6b92d9650561f3c2d2bb5f81031b5288e1e429833d4f7fa51a6a",
+      "images/column-2026-11-university-choice-beyond-hensachi-800.jpg": "760e3df4f2f1b4e9bb543df9180429119c41adc11bf0aac4db97cdd2e3c212eb",
+      "images/column-2026-11-university-choice-beyond-hensachi-400.jpg": "8b48799e47f6427511db09a8b857cf13d2e6775ee7ab7f7a81501b8d66722233"
+    },
+    "html_sha256": "a38d92c2595ecb1b7f138908ef0c07ba2888e5899f2b4f1148a767c31e095769"
   }
 ]
