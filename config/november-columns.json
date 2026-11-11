@@ -67,5 +67,17 @@
       "images/column-2026-11-university-choice-beyond-hensachi-400.jpg": "8b48799e47f6427511db09a8b857cf13d2e6775ee7ab7f7a81501b8d66722233"
     },
     "html_sha256": "a38d92c2595ecb1b7f138908ef0c07ba2888e5899f2b4f1148a767c31e095769"
+  },
+  {
+    "date": "2026-11-11",
+    "publish_at": "2026-11-11T07:00:00+09:00",
+    "slug": "2026-11-mock-exam-d-e-review-priorities",
+    "path": "column/2026-11-mock-exam-d-e-review-priorities.html",
+    "assets": {
+      "images/column-2026-11-mock-exam-d-e-review-priorities-400.jpg": "2e0157c2c0f1c1ebbbbe16b92f493996308d5be661921ca9c4a0e3e0e195b3f2",
+      "images/column-2026-11-mock-exam-d-e-review-priorities-800.jpg": "3322cdcd95a60d3a344735f25f8e69c47199980a44b7a81aeebe9d45703ee965",
+      "images/column-2026-11-mock-exam-d-e-review-priorities.jpg": "ddab64b3d55d0c475d05eeae788e61df3d6e30bb3772395512e50c23fb4155ef"
+    },
+    "html_sha256": "5ab0432638d5bc4d4356b1eddf68c9c24f759aa5032b58d67780532b7012039d"
   }
 ]

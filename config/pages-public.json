@@ -29,7 +29,8 @@
     "column/2026-11-hyogo-high-school-grades-choice.html",
     "column/2026-11-higashiosaka-learning-subsidy.html",
     "column/2026-11-national-public-recommendation-2027.html",
-    "column/2026-11-university-choice-beyond-hensachi.html"
+    "column/2026-11-university-choice-beyond-hensachi.html",
+    "column/2026-11-mock-exam-d-e-review-priorities.html"
   ],
   "existing_static": [
     "android-chrome-192x192.png",
@@ -107,6 +108,9 @@
     "images/column-2026-11-national-public-recommendation-2027.jpg",
     "images/column-2026-11-university-choice-beyond-hensachi.jpg",
     "images/column-2026-11-university-choice-beyond-hensachi-800.jpg",
-    "images/column-2026-11-university-choice-beyond-hensachi-400.jpg"
+    "images/column-2026-11-university-choice-beyond-hensachi-400.jpg",
+    "images/column-2026-11-mock-exam-d-e-review-priorities-400.jpg",
+    "images/column-2026-11-mock-exam-d-e-review-priorities-800.jpg",
+    "images/column-2026-11-mock-exam-d-e-review-priorities.jpg"
   ]
 }
