@@ -79,5 +79,17 @@
       "images/column-2026-11-mock-exam-d-e-review-priorities.jpg": "ddab64b3d55d0c475d05eeae788e61df3d6e30bb3772395512e50c23fb4155ef"
     },
     "html_sha256": "5ab0432638d5bc4d4356b1eddf68c9c24f759aa5032b58d67780532b7012039d"
+  },
+  {
+    "date": "2026-11-12",
+    "publish_at": "2026-11-12T07:00:00+09:00",
+    "slug": "2026-11-inquiry-learning-theme-ideas",
+    "path": "column/2026-11-inquiry-learning-theme-ideas.html",
+    "assets": {
+      "images/column-2026-11-inquiry-learning-theme-ideas-400.jpg": "5bd2476fe9c475958f5affe892056253535cef4dba81771e5ae685fdefb4096d",
+      "images/column-2026-11-inquiry-learning-theme-ideas.jpg": "3affff52c1658d8ff4c7e29fc523443d8f1f32269d9a4a66a357c9cbad8b78a1",
+      "images/column-2026-11-inquiry-learning-theme-ideas-800.jpg": "58f526828e2847bbe785dee98dddb0a0b2d4298cdf84a3ee6d76207969a03744"
+    },
+    "html_sha256": "ff812ebf531faf75f29c93a163a259268210d9cbbfcc72399a53779d9a31fb28"
   }
 ]

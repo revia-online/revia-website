@@ -12,7 +12,7 @@ from column_release import JST, ORIGIN, require, element_span, write_changes, Re
 
 ROOT = Path(__file__).resolve().parents[1]
 DRAFTS = Path('drafts/november-2026')
-DATES = tuple(f'2026-11-{day:02d}' for day in range(4, 9)) + ('2026-11-10', '2026-11-11')
+DATES = tuple(f'2026-11-{day:02d}' for day in range(4, 9)) + ('2026-11-10', '2026-11-11', '2026-11-12')
 
 
 def current_time():
