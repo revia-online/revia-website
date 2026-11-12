@@ -91,5 +91,17 @@
       "images/column-2026-11-inquiry-learning-theme-ideas-800.jpg": "58f526828e2847bbe785dee98dddb0a0b2d4298cdf84a3ee6d76207969a03744"
     },
     "html_sha256": "ff812ebf531faf75f29c93a163a259268210d9cbbfcc72399a53779d9a31fb28"
+  },
+  {
+    "date": "2026-11-13",
+    "publish_at": "2026-11-13T07:00:00+09:00",
+    "slug": "2026-11-study-time-and-review-methods",
+    "path": "column/2026-11-study-time-and-review-methods.html",
+    "assets": {
+      "images/column-2026-11-study-time-and-review-methods-400.jpg": "f91c0d3a4ad9641519ea973296f6605c26eda2a617f5f57bc916ce162cc99233",
+      "images/column-2026-11-study-time-and-review-methods.jpg": "48c7351725be269708453a67aced4ba689b1acdaf11ed2753900c9f3be4924a0",
+      "images/column-2026-11-study-time-and-review-methods-800.jpg": "5dbb56c458476a0c368d4c5f59a40411d61b9bb24e1fd71dbd25a699a12b7386"
+    },
+    "html_sha256": "6c41057e044a52275c69951188d812cd6169423677865f92f774ccdf1c471d33"
   }
 ]
