@@ -552,6 +552,11 @@ bookingForm?.addEventListener("submit", async (event) => {
   saveBookingHold(reservation);
   try {
     result = await sendReservation(reservation);
+    try {
+      if (typeof gtag === "function") {
+        gtag("event", "meeting_apply_complete", { event_category: "booking", event_label: "free_meeting" });
+      }
+    } catch (e) {}
   } catch (error) {
     console.error("booking_submission_failed", error.code || "unknown");
     // These errors are returned before a new booking intent is persisted by the Meet GAS.
