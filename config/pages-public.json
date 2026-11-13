@@ -32,7 +32,8 @@
     "column/2026-11-university-choice-beyond-hensachi.html",
     "column/2026-11-mock-exam-d-e-review-priorities.html",
     "column/2026-11-inquiry-learning-theme-ideas.html",
-    "column/2026-11-study-time-and-review-methods.html"
+    "column/2026-11-study-time-and-review-methods.html",
+    "column/2026-11-university-scholarship-application-timing.html"
   ],
   "existing_static": [
     "android-chrome-192x192.png",
@@ -119,6 +120,9 @@
     "images/column-2026-11-inquiry-learning-theme-ideas-800.jpg",
     "images/column-2026-11-study-time-and-review-methods-400.jpg",
     "images/column-2026-11-study-time-and-review-methods.jpg",
-    "images/column-2026-11-study-time-and-review-methods-800.jpg"
+    "images/column-2026-11-study-time-and-review-methods-800.jpg",
+    "images/column-2026-11-university-scholarship-application-timing-800.jpg",
+    "images/column-2026-11-university-scholarship-application-timing-400.jpg",
+    "images/column-2026-11-university-scholarship-application-timing.jpg"
   ]
 }

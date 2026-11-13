@@ -103,5 +103,17 @@
       "images/column-2026-11-study-time-and-review-methods-800.jpg": "5dbb56c458476a0c368d4c5f59a40411d61b9bb24e1fd71dbd25a699a12b7386"
     },
     "html_sha256": "6c41057e044a52275c69951188d812cd6169423677865f92f774ccdf1c471d33"
+  },
+  {
+    "date": "2026-11-14",
+    "publish_at": "2026-11-14T07:00:00+09:00",
+    "slug": "2026-11-university-scholarship-application-timing",
+    "path": "column/2026-11-university-scholarship-application-timing.html",
+    "assets": {
+      "images/column-2026-11-university-scholarship-application-timing-800.jpg": "1215d792dc9c4abd86f39202fbab44371c6f8580f1233222ffdcf1c6ca765322",
+      "images/column-2026-11-university-scholarship-application-timing-400.jpg": "cc1d769bd4a47440c5b68da04fc82186fb67e13410e09c266e74c721a67155bd",
+      "images/column-2026-11-university-scholarship-application-timing.jpg": "693173a6466367b49f97b0f8d23648032a905305fb682679a1a74227837e536b"
+    },
+    "html_sha256": "9868a62c336634e4a1f687e86caf8fb0c06dba7bf005ae62aee2ac78f4cb7a85"
   }
 ]
