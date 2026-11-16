@@ -12,7 +12,7 @@ from column_release import JST, ORIGIN, require, element_span, write_changes, Re
 
 ROOT = Path(__file__).resolve().parents[1]
 DRAFTS = Path('drafts/november-2026')
-DATES = tuple(f'2026-11-{day:02d}' for day in range(4, 9)) + ('2026-11-10', '2026-11-11', '2026-11-12', '2026-11-13', '2026-11-14', '2026-11-15')
+DATES = tuple(f'2026-11-{day:02d}' for day in range(4, 9)) + ('2026-11-10', '2026-11-11', '2026-11-12', '2026-11-13', '2026-11-14', '2026-11-15', '2026-11-17')
 
 
 def current_time():
@@ -23,7 +23,12 @@ def public_entries(root):
     records = json.loads((root/'config/november-columns.json').read_text())
     require(tuple(e['date'] for e in records) == DATES, 'INVALID_NOVEMBER_DATES')
     for e in records:
-        require(e['publish_at'] == e['date']+'T07:00:00+09:00', 'INVALID_NOVEMBER_TIME')
+        if e['date'] == '2026-11-17':
+            # This article is published immediately; retain its actual release time.
+            published = datetime.fromisoformat(e['publish_at'])
+            require(published.date().isoformat() == e['date'] and published.utcoffset() == JST.utcoffset(None), 'INVALID_NOVEMBER_TIME')
+        else:
+            require(e['publish_at'] == e['date']+'T07:00:00+09:00', 'INVALID_NOVEMBER_TIME')
         require(re.fullmatch(r'2026-11-[a-z0-9-]+', e['slug']), 'INVALID_NOVEMBER_SLUG')
         require(e['path'] == 'column/'+e['slug']+'.html', 'INVALID_NOVEMBER_PATH')
         require(all(re.fullmatch(r'images/column-2026-11-[a-z0-9-]+\.jpg', p) for p in e['assets']), 'INVALID_NOVEMBER_ASSET')
