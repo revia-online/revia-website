@@ -130,7 +130,7 @@
   },
   {
     "date": "2026-11-17",
-    "publish_at": "2026-11-17T08:50:29+09:00",
+    "publish_at": "2026-11-17T08:54:38+09:00",
     "slug": "2026-11-test-scores-basic-mistakes",
     "path": "column/2026-11-test-scores-basic-mistakes.html",
     "assets": {
@@ -138,6 +138,6 @@
       "images/column-2026-11-test-scores-basic-mistakes-800.jpg": "f07d058c9b8976e9bc6816e3f3cb72e8d3500e72646ccc8eab14d1c806be52c7",
       "images/column-2026-11-test-scores-basic-mistakes.jpg": "48b14bbbec45405d88de8ba762287850ebc589fcf92d6e30bedf76f1efe44e7b"
     },
-    "html_sha256": "ffb41efa5592a8a5e130153462c3f196decf008c3299eddca4650d13b2f45da8"
+    "html_sha256": "cfbc27551746b94b951fd0ca39b646d3807e02fbc7d2075b19e02e157496cc07"
   }
 ]
