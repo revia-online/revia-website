@@ -115,5 +115,17 @@
       "images/column-2026-11-university-scholarship-application-timing.jpg": "693173a6466367b49f97b0f8d23648032a905305fb682679a1a74227837e536b"
     },
     "html_sha256": "9868a62c336634e4a1f687e86caf8fb0c06dba7bf005ae62aee2ac78f4cb7a85"
+  },
+  {
+    "date": "2026-11-15",
+    "publish_at": "2026-11-15T07:00:00+09:00",
+    "slug": "2026-11-common-test-subject-selection-and-scoring",
+    "path": "column/2026-11-common-test-subject-selection-and-scoring.html",
+    "assets": {
+      "images/column-2026-11-common-test-subject-selection-and-scoring-400.jpg": "2c5cfc0bb335543f2f0ba207c8a5523e003ac76c2b1b3e78aef014088c3f742c",
+      "images/column-2026-11-common-test-subject-selection-and-scoring.jpg": "a109e59f88a74bee94c7a0b0ca07ee5bf79e0d540e53e3e7c19a6a496b394865",
+      "images/column-2026-11-common-test-subject-selection-and-scoring-800.jpg": "0a86d0bafc70fef7512ca5d8e6c01f1063b913f6fc97cb89ae6bdd26468e3150"
+    },
+    "html_sha256": "a232ffb8725e50814cc5c413857ae690804752146e453d8fccb957d7d5a247f1"
   }
 ]
