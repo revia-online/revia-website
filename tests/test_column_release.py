@@ -5,6 +5,7 @@ from datetime import timedelta
 import gzip
 import importlib.util
 import json
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -55,7 +56,7 @@ class ReleaseTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name)
-        for path in ("index.html", "column/index.html", "sitemap.xml", "favicon.png", "styles.css", "column.css"):
+        for path in ("index.html", "column/index.html", "sitemap.xml", "config/pages-public.json", "favicon.png", "styles.css", "column.css"):
             p = self.root / path
             p.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / path, p)
@@ -106,7 +107,8 @@ class ReleaseTests(unittest.TestCase):
             self.assertEqual(old[:s], text[:ns])
             self.assertEqual(old[e:], text[ne:])
         self.assertIn('gtag("config", "G-734S14C7HR")', home)
-        self.assertIn('href="column/2026-10-choosing-target-school.html"', home)
+        self.assertIn('href="2026-10-choosing-target-school.html"', listing)
+        self.assertNotIn('column-previous-link', home)
         self.assertIn("<h3>", home)
 
     def test_all_six_and_no_seventh(self):
@@ -262,7 +264,7 @@ class ReleaseTests(unittest.TestCase):
         git(self.root, "clone", str(remote), str(repo))
         git(repo, "config", "user.name", "Release Test")
         git(repo, "config", "user.email", "test@example.invalid")
-        for p in ("index.html", "column/index.html", "sitemap.xml", "favicon.png", "styles.css", "column.css"):
+        for p in ("index.html", "column/index.html", "sitemap.xml", "config/pages-public.json", "favicon.png", "styles.css", "column.css"):
             dest = repo / p; dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(self.root / p, dest)
         git(repo, "add", "."); git(repo, "commit", "-m", "Baseline"); git(repo, "push", "origin", "main")
@@ -299,6 +301,68 @@ class ReleaseTests(unittest.TestCase):
                         self.assertEqual(git(remote, "rev-parse", "main"), remote_head)
         finally:
             os.chdir(old_cwd)
+
+
+
+class LatestHomeTests(unittest.TestCase):
+    home = '<main><article class="column-latest-card">old</article></main>'
+
+    def listing(self, *cards):
+        return '<div class="column-card-grid">' + ''.join(cards) + '</div>'
+
+    def card(self, slug, date, status='published'):
+        return (f'<article class="column-card" data-status="{status}">'
+                f'<time datetime="{date}">date</time>'
+                f'<h2><a href="{slug}.html">Title &amp; {slug}</a></h2></article>')
+
+    def test_future_unlisted_and_draft_never_win(self):
+        at = r.instant('2026-11-17T08:00:00+09:00')
+        listing = self.listing(self.card('future', '2026-11-17T08:00:01+09:00'),
+                               self.card('unlisted', '2026-11-17T07:59:00+09:00'),
+                               self.card('draft', '2026-11-17T07:59:00+09:00', 'draft'),
+                               self.card('old', '2026-11-16'),
+                               self.card('latest', '2026-11-17T08:00:00+09:00'))
+        result = r.latest_home(self.home, listing,
+                              {'column/'+s+'.html' for s in ('future', 'draft', 'old', 'latest')}, at)
+        self.assertIn('href="column/latest.html"', result)
+        self.assertIn('Title &amp; latest', result)
+        self.assertIn('2026年11月17日', result)
+        self.assertNotIn('future', result)
+        self.assertNotIn('draft', result)
+        self.assertEqual(result.count('<article'), 1)
+        self.assertEqual(r.latest_home(result, listing, {'column/latest.html'}, at), result)
+
+    def test_same_instant_uses_url_order_independent_of_listing_order(self):
+        a = self.card('a', '2026-11-17')
+        b = self.card('b', '2026-11-16T15:00:00Z')
+        for cards in ((a, b), (b, a)):
+            result = r.latest_home(self.home, self.listing(*cards),
+                                  {'column/a.html', 'column/b.html'}, r.instant('2026-11-17T00:00:00+09:00'))
+            self.assertIn('href="column/a.html"', result)
+
+    def test_no_published_candidate_fails_without_replacing_fallback(self):
+        with self.assertRaisesRegex(r.ReleaseError, 'NO_PUBLISHED_COLUMN'):
+            r.latest_home(self.home, self.listing(self.card('future', '2027-01-01')),
+                          {'column/future.html'}, r.instant('2026-11-17T00:00:00+09:00'))
+
+    def test_real_archive_complete_and_dates_titles_match_articles(self):
+        manifest = json.loads((ROOT/'config/pages-public.json').read_text())
+        listing = (ROOT/'column/index.html').read_text()
+        paths, timestamps = [], []
+        for source in re.findall(r'<article class="column-card">.*?</article>', listing, re.S):
+            page = r.Page(source)
+            href = next(ref for kind, ref in page.refs if kind == 'link')
+            paths.append('column/'+href)
+            article = r.Page((ROOT/'column'/href).read_text())
+            heading = re.search(r'<h2>\s*<a[^>]*>(.*?)</a>\s*</h2>', source, re.S)[1]
+            self.assertEqual(r.html.unescape(re.sub(r"<[^>]+>", "", heading)).strip(), article.texts['h1'][0]['text'].strip())
+            value = page.texts['time'][0]['attrs']['datetime']
+            self.assertEqual(value[:10], article.texts['time'][0]['attrs']['datetime'][:10])
+            timestamps.append(r.instant(value if len(value) > 10 else value+'T00:00:00+09:00'))
+        self.assertEqual(set(paths), set(manifest['existing_articles']))
+        self.assertEqual(len(paths), len(set(paths)))
+        self.assertEqual(timestamps, sorted(timestamps, reverse=True))
+        self.assertEqual(r.sync_home(ROOT, r.datetime.now(r.JST)), (ROOT/'index.html').read_text())
 
 
 if __name__ == "__main__":

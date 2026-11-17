@@ -220,6 +220,56 @@ def element_span(text, tag, class_name):
     raise ReleaseError("TEMPLATE_UNCLOSED")
 
 
+def latest_home(home, listing, published_paths, now):
+    """Generate one compact preview from public listing cards, never from drafts.
+
+    Date-only values mean 00:00 JST. Equal instants use ascending URL order.
+    The caller supplies the existing public allowlist, including staged releases.
+    """
+    require(now.tzinfo is not None, "TIMEZONE_REQUIRED")
+    _, start, end, _ = element_span(listing, "div", "column-card-grid")
+    candidates = []
+    for match in re.finditer(r'<article\b[^>]*>.*?</article>', listing[start:end], re.S):
+        source = match[0]
+        opening = source[:source.index('>') + 1]
+        if re.search(r'data-status=["\']draft["\']', opening):
+            continue
+        heading = re.search(r'<h2\b[^>]*>\s*<a\b[^>]*href="([a-z0-9-]+\.html)"[^>]*>(.*?)</a>\s*</h2>', source, re.S)
+        require(heading is not None, "COLUMN_HEADING_MISSING")
+        path = "column/" + heading[1]
+        if path not in published_paths:
+            continue
+        times = Page(source).texts.get("time", [])
+        require(len(times) == 1, "COLUMN_DATE_MISSING")
+        value = times[0]["attrs"].get("datetime", "")
+        if re.fullmatch(r"\d{4}-\d{2}-\d{2}", value):
+            value += "T00:00:00+09:00"
+        published = instant(value)
+        if published > now:
+            continue
+        title = html.unescape(re.sub(r"<[^>]+>", "", heading[2])).strip()
+        require(bool(title), "COLUMN_TITLE_MISSING")
+        candidates.append((published, path, title, times[0]["attrs"]["datetime"]))
+    require(bool(candidates), "NO_PUBLISHED_COLUMN")
+    published, path, title, value = sorted(candidates, key=lambda item: (-item[0].timestamp(), item[1]))[0]
+    esc = lambda value: html.escape(value, quote=True)
+    preview = (f'<article class="column-latest-card">\n'
+               f'            <p class="column-card-meta"><time datetime="{esc(value)}">'
+               f'{published.year}年{published.month}月{published.day}日</time></p>\n'
+               f'            <h3><a href="{esc(path)}">{esc(title)}</a></h3>\n'
+               f'            <a class="column-text-link" href="{esc(path)}" aria-label="{esc(title)}を読む">続きを読む</a>\n'
+               '          </article>')
+    start, _, _, end = element_span(home, "article", "column-latest-card")
+    return home[:start] + preview + home[end:]
+
+
+def sync_home(root, now):
+    manifest = json.loads((root / "config/pages-public.json").read_text())
+    paths = set(manifest["existing_articles"]) | {r["path"] for r in read_ledger(root).values()}
+    return latest_home((root / "index.html").read_text(),
+                       (root / "column/index.html").read_text(), paths, now)
+
+
 def card(a, slot, latest=False):
     esc = lambda key: html.escape(a[key], quote=True)
     href = ("column/" if latest else "") + a["slug"] + ".html"
@@ -294,18 +344,10 @@ def prepare(root, now, environ):
         records[slot] = {"path": path, "publish_at": release_at(slot).isoformat(), "approval_sha256": payload["approval"]["sha256"],
                          "html_sha256": hashlib.sha256(changes[path]).hexdigest(), "released_at": now.isoformat(),
                          "assets_sha256": {p: hashlib.sha256(data).hexdigest() for p, data in assets.items()}}
-        # A late earlier article must not replace a newer latest article.
-        if slot == max(records):
-            start, _, _, end = element_span(home, "article", "column-latest-card")
-            old = home[start:end]
-            previous = re.findall(r'<a\s+class="column-previous-link"[^>]*>.*?</a>', old, re.S)
-            prior_path = re.search(r'href="(column/[a-z0-9-]+\.html)"', old)
-            prior_number = re.search(r"第(\d+)回", old)
-            require(prior_path and prior_number, "PREVIOUS_LATEST_MISSING")
-            links = f'<a class="column-previous-link" href="{prior_path[1]}">第{prior_number[1]}回の記事を読む</a>\n' + "\n".join(previous)
-            latest = card(a, slot, latest=True).replace("</article>", links + "\n</article>")
-            home = home[:start] + latest + home[end:]
     if changes:
+        manifest = json.loads((root / "config/pages-public.json").read_text())
+        paths = set(manifest["existing_articles"]) | {r["path"] for r in records.values()}
+        home = latest_home(home, listing, paths, now)
         for loc in (ORIGIN + "/", ORIGIN + "/column/"):
             pattern = r"(<loc>" + re.escape(loc) + r"</loc>\s*<lastmod>)[^<]+(</lastmod>)"
             require(len(re.findall(pattern, sitemap)) == 1, "SITEMAP_EXISTING_ENTRY_MISMATCH")
@@ -367,7 +409,7 @@ def verify_once(root, now, fetch=fetch_public):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=("gate", "prepare", "verify", "pack"))
+    parser.add_argument("command", choices=("gate", "prepare", "verify", "pack", "sync-home"))
     parser.add_argument("--root", type=Path, default=Path.cwd())
     parser.add_argument("--apply", action="store_true")
     parser.add_argument("--input", type=Path)
@@ -375,7 +417,13 @@ def main():
     parser.add_argument("--attempts", type=int, default=1)
     args = parser.parse_args()
     now = datetime.now(JST)
-    if args.command == "gate":
+    if args.command == "sync-home":
+        home = sync_home(args.root, now)
+        changed = home != (args.root / "index.html").read_text()
+        if args.apply and changed:
+            write_changes(args.root, {"index.html": home.encode()})
+        print(json.dumps({"changed": changed, "applied": args.apply, "push": False, "deploy": False}))
+    elif args.command == "gate":
         allowed = bool(due(now)) and os.environ.get("REVIA_PUBLISH_202610_ENABLED") == "true" and os.environ.get("GITHUB_REF") == "refs/heads/main"
         if os.environ.get("GITHUB_OUTPUT"):
             with open(os.environ["GITHUB_OUTPUT"], "a") as out:
