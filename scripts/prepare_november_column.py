@@ -8,7 +8,7 @@ import json
 from pathlib import Path
 import re
 import xml.etree.ElementTree as ET
-from column_release import JST, ORIGIN, require, element_span, write_changes, ReleaseError
+from column_release import JST, ORIGIN, require, element_span, write_changes, ReleaseError, latest_home
 
 ROOT = Path(__file__).resolve().parents[1]
 DRAFTS = Path('drafts/november-2026')
@@ -116,10 +116,7 @@ def prepare(root, slot, now):
     sitemap = (root/'sitemap.xml').read_text()
     _, start, _, _ = element_span(listing, 'div', 'column-card-grid')
     listing = listing[:start]+'\n            '+card(e)+'\n'+listing[start:]
-    start, _, _, end = element_span(home, 'article', 'column-latest-card')
-    # Retain the previous latest card and every existing older card/link.
-    previous = home[start:end].replace('column-latest-card', 'column-card', 1).replace('>最新記事<', '>前回の記事<', 1)
-    home = home[:start]+card(e, latest=True)+'\n          '+previous+home[end:]
+    home = latest_home(home, listing, set(manifest['existing_articles']) | {e['path']}, now)
     require(sitemap.count('</urlset>') == 1, 'SITEMAP_BOUNDARY_MISMATCH')
     sitemap = sitemap.replace('</urlset>', f'  <url><loc>{ORIGIN}/{e["path"]}</loc><lastmod>{slot}</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>\n</urlset>')
     for url in (ORIGIN+'/', ORIGIN+'/column/'):

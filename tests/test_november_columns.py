@@ -13,7 +13,7 @@ sys.path.insert(0, str(ROOT/'scripts'))
 import build_pages
 import build_vercel_static
 import prepare_november_column as november
-from column_release import JST, ReleaseError, write_changes
+from column_release import JST, ReleaseError, write_changes, latest_home, element_span
 
 
 @unittest.skipUnless((ROOT/november.DRAFTS/'manifest.json').is_file(), 'Private approved manuscripts are local-only; run release QA with the provided private package')
@@ -43,10 +43,11 @@ class NovemberTests(unittest.TestCase):
         home = self.root/'index.html'
         text = home.read_text()
         if '<article class="column-latest-card">' not in text:
-            text = re.sub(r'<article class="column-card">.*?</article>',
-                lambda m: m[0].replace('column-card"', 'column-latest-card"', 1).replace('>前回の記事<', '>最新記事<')
-                if '2026-11-self-directed-learning-ai.html' in m[0] else m[0], text, flags=re.S)
-            home.write_text(text)
+            _, _, close, _ = element_span(text, 'div', 'column-preview-layout')
+            text = text[:close] + '<article class="column-latest-card"></article>' + text[close:]
+        text = latest_home(text, (self.root/'column/index.html').read_text(),
+                           set(manifest['existing_articles']), self.at('2026-11-03T23:59:59+09:00'))
+        home.write_text(text)
         manifest_path.write_text(json.dumps(manifest))
 
     def tearDown(self):
@@ -82,8 +83,13 @@ class NovemberTests(unittest.TestCase):
             for p, original in baseline.items():
                 self.assertEqual((self.root/p).read_bytes(), original)
         home = (self.root/'index.html').read_text()
-        self.assertIn('2026-11-self-directed-learning-ai.html', home)
-        self.assertIn('2026-10-english-writing-simple-japanese.html', home)
+        self.assertEqual(home.count('<article class="column-latest-card">'), 1)
+        self.assertNotIn('<article class="column-card">', home)
+        self.assertNotIn('2026-11-self-directed-learning-ai.html', home)
+        self.assertNotIn('2026-10-english-writing-simple-japanese.html', home)
+        listing = (self.root/'column/index.html').read_text()
+        self.assertIn('2026-11-self-directed-learning-ai.html', listing)
+        self.assertIn('2026-10-english-writing-simple-japanese.html', listing)
 
     def test_current_build_excludes_drafts_and_manuscripts(self):
         with patch.object(november, 'current_time', return_value=self.at('2026-11-03T23:59:59+09:00')):
