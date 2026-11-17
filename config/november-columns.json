@@ -139,5 +139,15 @@
       "images/column-2026-11-test-scores-basic-mistakes.jpg": "48b14bbbec45405d88de8ba762287850ebc589fcf92d6e30bedf76f1efe44e7b"
     },
     "html_sha256": "cfbc27551746b94b951fd0ca39b646d3807e02fbc7d2075b19e02e157496cc07"
+  },
+  {
+    "date": "2026-11-18",
+    "publish_at": "2026-11-18T08:47:11+09:00",
+    "slug": "2026-11-kosen-career-job-offers",
+    "path": "column/2026-11-kosen-career-job-offers.html",
+    "assets": {
+      "images/column-2026-11-kosen-career-job-offers.png": "0c2a694d04aa648200e3ae159515cafebd905306789d19a45b74d56115f1d786"
+    },
+    "html_sha256": "118dcd061197a869a7450b8160ef57881f9a2323718b6d8de09924e55b2fd77a"
   }
 ]

@@ -35,7 +35,8 @@
     "column/2026-11-study-time-and-review-methods.html",
     "column/2026-11-university-scholarship-application-timing.html",
     "column/2026-11-common-test-subject-selection-and-scoring.html",
-    "column/2026-11-test-scores-basic-mistakes.html"
+    "column/2026-11-test-scores-basic-mistakes.html",
+    "column/2026-11-kosen-career-job-offers.html"
   ],
   "existing_static": [
     "android-chrome-192x192.png",
@@ -131,6 +132,7 @@
     "images/column-2026-11-common-test-subject-selection-and-scoring-800.jpg",
     "images/column-2026-11-test-scores-basic-mistakes-400.jpg",
     "images/column-2026-11-test-scores-basic-mistakes-800.jpg",
-    "images/column-2026-11-test-scores-basic-mistakes.jpg"
+    "images/column-2026-11-test-scores-basic-mistakes.jpg",
+    "images/column-2026-11-kosen-career-job-offers.png"
   ]
 }
