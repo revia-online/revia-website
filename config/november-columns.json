@@ -149,5 +149,15 @@
       "images/column-2026-11-kosen-career-job-offers.png": "0c2a694d04aa648200e3ae159515cafebd905306789d19a45b74d56115f1d786"
     },
     "html_sha256": "7bd6c7cb042f5c4e0a09764a8f818d633a7389234d608902171f1d8111ddaa67"
+  },
+  {
+    "date": "2026-11-19",
+    "publish_at": "2026-11-19T06:15:42+09:00",
+    "slug": "2026-11-curriculum-content-and-understanding",
+    "path": "column/2026-11-curriculum-content-and-understanding.html",
+    "assets": {
+      "images/column-2026-11-curriculum-content-and-understanding.png": "1feb1d0e95a27b40672ff8757490a57a4c08214cbb607203b1864ac0d236f484"
+    },
+    "html_sha256": "bd67e8dfff685a70fcefb6a3bdf79ce8e832a660495ecf6e815a0319d6944958"
   }
 ]
