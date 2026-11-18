@@ -152,12 +152,12 @@
   },
   {
     "date": "2026-11-19",
-    "publish_at": "2026-11-19T06:15:42+09:00",
+    "publish_at": "2026-11-19T06:19:08+09:00",
     "slug": "2026-11-curriculum-content-and-understanding",
     "path": "column/2026-11-curriculum-content-and-understanding.html",
     "assets": {
       "images/column-2026-11-curriculum-content-and-understanding.png": "1feb1d0e95a27b40672ff8757490a57a4c08214cbb607203b1864ac0d236f484"
     },
-    "html_sha256": "bd67e8dfff685a70fcefb6a3bdf79ce8e832a660495ecf6e815a0319d6944958"
+    "html_sha256": "fe813aedbf72783bd40394d8deeb798f57f2ed20f236a8e81e6712dd71870872"
   }
 ]
