@@ -12,7 +12,7 @@ from column_release import JST, ORIGIN, require, element_span, write_changes, Re
 
 ROOT = Path(__file__).resolve().parents[1]
 DRAFTS = Path('drafts/november-2026')
-DATES = tuple(f'2026-11-{day:02d}' for day in range(4, 9)) + ('2026-11-10', '2026-11-11', '2026-11-12', '2026-11-13', '2026-11-14', '2026-11-15', '2026-11-17', '2026-11-18', '2026-11-19')
+DATES = tuple(f'2026-11-{day:02d}' for day in range(4, 9)) + ('2026-11-10', '2026-11-11', '2026-11-12', '2026-11-13', '2026-11-14', '2026-11-15', '2026-11-17', '2026-11-18', '2026-11-19', '2026-11-20')
 
 
 def current_time():
@@ -23,7 +23,7 @@ def public_entries(root):
     records = json.loads((root/'config/november-columns.json').read_text())
     require(tuple(e['date'] for e in records) == DATES, 'INVALID_NOVEMBER_DATES')
     for e in records:
-        if e['date'] in ('2026-11-17', '2026-11-18', '2026-11-19'):
+        if e['date'] in ('2026-11-17', '2026-11-18', '2026-11-19', '2026-11-20'):
             # These articles are published immediately; retain their actual release times.
             published = datetime.fromisoformat(e['publish_at'])
             require(published.date().isoformat() == e['date'] and published.utcoffset() == JST.utcoffset(None), 'INVALID_NOVEMBER_TIME')

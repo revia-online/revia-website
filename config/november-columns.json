@@ -159,5 +159,15 @@
       "images/column-2026-11-curriculum-content-and-understanding.png": "1feb1d0e95a27b40672ff8757490a57a4c08214cbb607203b1864ac0d236f484"
     },
     "html_sha256": "fe813aedbf72783bd40394d8deeb798f57f2ed20f236a8e81e6712dd71870872"
+  },
+  {
+    "date": "2026-11-20",
+    "publish_at": "2026-11-20T08:57:38+09:00",
+    "slug": "2026-11-scholarships-income-and-repayment",
+    "path": "column/2026-11-scholarships-income-and-repayment.html",
+    "assets": {
+      "images/column-2026-11-scholarships-income-and-repayment.png": "0ff4fe2f117eb551a651e26c2f469b3b9b3285f4d7b541c3e0717ca8180a8f90"
+    },
+    "html_sha256": "9661bcfe49e518bb2f1eaf8c8e9be68a67f6fe222c2591a229bce483cbc3540a"
   }
 ]
