@@ -169,5 +169,15 @@
       "images/column-2026-11-scholarships-income-and-repayment.png": "0ff4fe2f117eb551a651e26c2f469b3b9b3285f4d7b541c3e0717ca8180a8f90"
     },
     "html_sha256": "f6107699646595f79e6e4178911f7a0d39e4e98cdf3180518b0b63f82d42670b"
+  },
+  {
+    "date": "2026-11-21",
+    "publish_at": "2026-11-21T07:00:00+09:00",
+    "slug": "2026-11-comprehensive-admissions-preparation",
+    "path": "column/2026-11-comprehensive-admissions-preparation.html",
+    "assets": {
+      "images/column-2026-11-comprehensive-admissions-preparation.png": "fad796610cc931e339ddbe5a6708bbc0284ceb568222eb5fbe05ab33f06ec0da"
+    },
+    "html_sha256": "c2f17ffc7946262b9311c8e38c5b96aa347114803d84ebde4da44016532c10b3"
   }
 ]
