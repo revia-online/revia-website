@@ -23,7 +23,7 @@ def public_entries(root):
     records = json.loads((root/'config/november-columns.json').read_text())
     require(tuple(e['date'] for e in records) == DATES, 'INVALID_NOVEMBER_DATES')
     for e in records:
-        if e['date'] in ('2026-11-17', '2026-11-18', '2026-11-19', '2026-11-20', '2026-11-21'):
+        if e['date'] in ('2026-11-17', '2026-11-18', '2026-11-19', '2026-11-20', '2026-11-21', '2026-11-22'):
             # These articles are published immediately; retain their actual release times.
             published = datetime.fromisoformat(e['publish_at'])
             require(published.date().isoformat() == e['date'] and published.utcoffset() == JST.utcoffset(None), 'INVALID_NOVEMBER_TIME')
