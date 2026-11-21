@@ -179,5 +179,15 @@
       "images/column-2026-11-comprehensive-admissions-preparation.png": "fad796610cc931e339ddbe5a6708bbc0284ceb568222eb5fbe05ab33f06ec0da"
     },
     "html_sha256": "3001b24ebae75b72da017d9068bcd2aab0213e4d601b7984f18cdbaed4f7bf33"
+  },
+  {
+    "date": "2026-11-22",
+    "publish_at": "2026-11-22T07:00:00+09:00",
+    "slug": "2026-11-himeji-commercial-pbl-industry-partnership",
+    "path": "column/2026-11-himeji-commercial-pbl-industry-partnership.html",
+    "assets": {
+      "images/column-2026-11-himeji-commercial-pbl-industry-partnership.png": "528bd03d0d07352de8cba5ec04d1a9a83f9016035c949a6d9efaaf86a4c8db78"
+    },
+    "html_sha256": "32f8493833bcbd113baed326a8e4cf51428e3985a93fe7a123d2aacc068ce154"
   }
 ]
