@@ -54,7 +54,8 @@ def check_public_state(root, articles, static):
     home = (root/'index.html').read_text()
     listing = (root/'column/index.html').read_text()
     sitemap = (root/'sitemap.xml').read_text()
-    for e in public_entries(root):
+    records = public_entries(root)
+    for e in records:
         active = e['path'] in articles
         assets = set(e['assets'])
         if active:
@@ -67,10 +68,8 @@ def check_public_state(root, articles, static):
         else:
             require(not assets & set(static), 'NOVEMBER_UNRELEASED_IMAGE_EXPOSED')
             require(all(e['slug'] not in text for text in (home, listing, sitemap)), 'NOVEMBER_FUTURE_REFERENCE')
-    active = [e for e in public_entries(root) if e['path'] in articles]
-    if active:
-        s, _, _, end = element_span(home, 'article', 'column-latest-card')
-        require(active[-1]['path'] in home[s:end], 'NOVEMBER_LATEST_MISMATCH')
+    if any(e['path'] in articles for e in records):
+        require(latest_home(home, listing, set(articles), now) == home, 'NOVEMBER_LATEST_MISMATCH')
 
 
 def card(e, latest=False):

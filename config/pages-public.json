@@ -40,7 +40,8 @@
     "column/2026-11-curriculum-content-and-understanding.html",
     "column/2026-11-scholarships-income-and-repayment.html",
     "column/2026-11-comprehensive-admissions-preparation.html",
-    "column/2026-11-himeji-commercial-pbl-industry-partnership.html"
+    "column/2026-11-himeji-commercial-pbl-industry-partnership.html",
+    "column/english-speaking-practice-shadowing.html"
   ],
   "existing_static": [
     "android-chrome-192x192.png",
@@ -141,6 +142,7 @@
     "images/column-2026-11-curriculum-content-and-understanding.png",
     "images/column-2026-11-scholarships-income-and-repayment.png",
     "images/column-2026-11-comprehensive-admissions-preparation.png",
-    "images/column-2026-11-himeji-commercial-pbl-industry-partnership.png"
+    "images/column-2026-11-himeji-commercial-pbl-industry-partnership.png",
+    "images/column-english-speaking-practice-shadowing.jpg"
   ]
 }
