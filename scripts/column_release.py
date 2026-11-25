@@ -221,7 +221,7 @@ def element_span(text, tag, class_name):
 
 
 def latest_home(home, listing, published_paths, now):
-    """Generate one compact preview from public listing cards, never from drafts.
+    """Generate the compact preview from eligible public listing cards.
 
     Date-only values mean 00:00 JST. Equal instants use ascending URL order.
     The caller supplies the existing public allowlist, including staged releases.
@@ -233,6 +233,8 @@ def latest_home(home, listing, published_paths, now):
         source = match[0]
         opening = source[:source.index('>') + 1]
         if re.search(r'data-status=["\']draft["\']', opening):
+            continue
+        if re.search(r'\bdata-home-latest=["\']exclude["\']', opening):
             continue
         heading = re.search(r'<h2\b[^>]*>\s*<a\b[^>]*href="([a-z0-9-]+\.html)"[^>]*>(.*?)</a>\s*</h2>', source, re.S)
         require(heading is not None, "COLUMN_HEADING_MISSING")

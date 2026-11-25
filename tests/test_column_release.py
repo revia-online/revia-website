@@ -345,11 +345,22 @@ class LatestHomeTests(unittest.TestCase):
             r.latest_home(self.home, self.listing(self.card('future', '2027-01-01')),
                           {'column/future.html'}, r.instant('2026-11-17T00:00:00+09:00'))
 
+    def test_special_listing_does_not_replace_the_latest_home_card(self):
+        special = self.card('special', '2026-11-17T07:30:00+09:00').replace(
+            'data-status="published"', 'data-status="published" data-home-latest="exclude"')
+        regular = self.card('regular', '2026-11-17')
+        upcoming = self.card('upcoming', '2026-11-18')
+        listing = self.listing(upcoming, regular, special)
+        paths = {'column/special.html', 'column/regular.html', 'column/upcoming.html'}
+        for date, expected in [('2026-11-17', 'regular'), ('2026-11-18', 'upcoming')]:
+            result = r.latest_home(self.home, listing, paths, r.instant(date+'T08:00:00+09:00'))
+            self.assertIn(f'href="column/{expected}.html"', result)
+
     def test_real_archive_complete_and_dates_titles_match_articles(self):
         manifest = json.loads((ROOT/'config/pages-public.json').read_text())
         listing = (ROOT/'column/index.html').read_text()
         paths, timestamps = [], []
-        for source in re.findall(r'<article class="column-card">.*?</article>', listing, re.S):
+        for source in re.findall(r'<article class="column-card"(?: [^>]*)?>.*?</article>', listing, re.S):
             page = r.Page(source)
             href = next(ref for kind, ref in page.refs if kind == 'link')
             paths.append('column/'+href)
@@ -358,7 +369,9 @@ class LatestHomeTests(unittest.TestCase):
             self.assertEqual(r.html.unescape(re.sub(r"<[^>]+>", "", heading)).strip(), article.texts['h1'][0]['text'].strip())
             value = page.texts['time'][0]['attrs']['datetime']
             self.assertEqual(value[:10], article.texts['time'][0]['attrs']['datetime'][:10])
-            timestamps.append(r.instant(value if len(value) > 10 else value+'T00:00:00+09:00'))
+            opening = source[:source.index('>')]
+            if 'data-home-latest="exclude"' not in opening:
+                timestamps.append(r.instant(value if len(value) > 10 else value+'T00:00:00+09:00'))
         self.assertEqual(set(paths), set(manifest['existing_articles']))
         self.assertEqual(len(paths), len(set(paths)))
         self.assertEqual(timestamps, sorted(timestamps, reverse=True))
